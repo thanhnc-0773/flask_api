@@ -1,4 +1,3 @@
-# Use Node.js 20.11.0 image
 FROM node:20.11.0
 
 # Set working directory
@@ -13,14 +12,8 @@ RUN npm ci
 # Copy all frontend files
 COPY . .
 
-# Build the React app
-RUN npm run build
+# Use development server for hot reload
+CMD ["npm", "start"]
 
-# Install Serve to serve the built app
-RUN npm install -g serve
-
-# Command to run the app
-CMD ["serve", "-s", "build"]
-
-# Expose the port React app runs on
+# Expose the port
 EXPOSE 3000

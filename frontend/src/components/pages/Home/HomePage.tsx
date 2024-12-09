@@ -1,6 +1,6 @@
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { HomeContextProvider } from "./context/HomeContext";
 import "./HomePage.css";
 import HomeTemplate from "./HomeTemplate";

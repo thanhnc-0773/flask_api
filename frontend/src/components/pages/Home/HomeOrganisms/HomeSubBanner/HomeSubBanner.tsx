@@ -1,6 +1,6 @@
 import React from "react";
 import logoContent from "src/assets/images/HTC_logo_White_1.png";
-import subBigBanner from "src/assets/images/banner.webp";
+import subBigBanner from "src/assets/images/Dragon_motor_11.jpg";
 import subBanner from "src/assets/images/img-1.webp";
 import "./HomeSubBanner.css";
 
@@ -48,7 +48,7 @@ const HomeSubBanner: React.FC = () => {
         </div>
       </div>
 
-      <div className="sub-banner row  animate-me">
+      <div className="sub-banner row  animate-me" style={{ maxWidth: "100%" }}>
         <img src={subBigBanner} alt="logo-content" className="sub-big-banner" />
       </div>
     </div>
