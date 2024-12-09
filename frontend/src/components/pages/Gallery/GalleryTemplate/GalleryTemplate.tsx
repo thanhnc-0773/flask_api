@@ -16,7 +16,7 @@ const GalleryTemplate: React.FC = () => {
       <GalleryAction />
 
       <ModalBase
-        isShow={true}
+        isShow={false}
         size="xl"
         onClose={() => {
           console.log("close");

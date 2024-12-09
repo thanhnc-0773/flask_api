@@ -7,8 +7,13 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { store } from "./app/store";
+import initRequest from "./utilities/services/initRequest";
 
-const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
+const container = document.getElementById("root")!;
+const root = ReactDOM.createRoot(container);
+
+initRequest();
+
 root.render(
   <Provider store={store}>
     <BrowserRouter>

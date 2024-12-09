@@ -1,20 +1,21 @@
-import React, { useContext } from "react";
+import React from "react";
 import banner from "src/assets/images/Banner_2.jpg";
 import "./HomeBanner.css";
-import { HomeContext } from "../../context/HomeContext";
 
 type Props = {
   img?: string;
-  isShowHorizontalText?: boolean;
+  scrollPosition?: number;
+  verticalSubText?: string | React.ReactNode;
+  verticalMainText?: string | React.ReactNode;
+  horizontalSubText?: string | React.ReactNode;
   isShowVerticalText?: boolean;
   horizontalMainText?: string | React.ReactNode;
-  horizontalSubText?: string | React.ReactNode;
-  verticalMainText?: string | React.ReactNode;
-  verticalSubText?: string | React.ReactNode;
+  isShowHorizontalText?: boolean;
 };
 
 const HomeBanner: React.FC<Props> = ({
   img,
+  scrollPosition = 0,
   verticalSubText,
   verticalMainText,
   horizontalSubText,
@@ -22,8 +23,6 @@ const HomeBanner: React.FC<Props> = ({
   isShowVerticalText,
   isShowHorizontalText,
 }) => {
-  const { scrollPosition } = useContext(HomeContext);
-
   return (
     <div className="banner-container animate-me">
       <img src={img ?? banner} alt="banner" className="home-banner" />
