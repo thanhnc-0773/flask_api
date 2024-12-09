@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Space+Grotesk:wght@300..700&display=swap');
+
+body {
+  margin: 0;
+  font-family: 'Scto Grotesk', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body.modal-open,
+body:has(.global-loading-container.show) {
+  overflow: hidden !important;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+:root {
+  --font-primary: 'FontName', sans-serif;
+  --font-secondary: 'AnotherFont', serif;
+  --background-color: #1F1F20;
+  --black-color: #000000;
+  --footer-color: #2A2A2A;
+  --grey-color: #454545;
+  --white-color: #ffffff;
+  --vision-blue: rgb(66, 143, 247);
+  --red-color: rgb(250, 84, 84)
+}
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+::-webkit-scrollbar-button {
+  background: transparent
+}
+
+.global-loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.global-loading-container.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.global-loading-container.show {
+  opacity: 1;
+}
