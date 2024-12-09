@@ -6,16 +6,6 @@ export enum ENV {
   PRODUCTION = "production",
 }
 
-type EnvSelection = {
-  [k in ENV]: string;
-};
-
-const envSelection: EnvSelection = {
-  [ENV.LOCAL]: "",
-  [ENV.DEVELOPMENT]: ``,
-  [ENV.PRODUCTION]: ``,
-};
-
 export type IConfig = AxiosRequestConfig;
 
 type IAxiosResponse = AxiosError<any> & {
@@ -24,7 +14,7 @@ type IAxiosResponse = AxiosError<any> & {
   };
 };
 
-export const endpointApi = envSelection[process.env.REACT_APP_ENV as keyof EnvSelection];
+export const endpointApi = process.env.REACT_APP_API_URL;
 
 const requestConfig: IConfig = {
   baseURL: endpointApi,
