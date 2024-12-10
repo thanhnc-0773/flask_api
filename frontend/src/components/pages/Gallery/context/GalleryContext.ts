@@ -8,6 +8,7 @@ export interface GalleryContextProps {
   isLoading: boolean;
   listArtist: DetailArtist[];
   observerRef: React.MutableRefObject<HTMLDivElement | null>;
+  scrollPosition: number;
   onSelectArtist: (id: string) => void;
   handleChangeTab: (tab: string) => void;
 }
