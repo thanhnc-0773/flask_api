@@ -67,7 +67,7 @@ def create_gallery():
         if 'file' in request.files:
             file = request.files['file']
             if file.filename != '':
-                s3_url = upload_file_to_s3(file, f"{Gallery.__tablename__}/{new_gallery.id}")
+                s3_url = upload_file_to_s3(file, Gallery.__tablename__)
                 new_gallery.picture = s3_url
                 new_gallery.save()
         return jsonify(new_gallery.to_dict()), 201
@@ -253,7 +253,7 @@ def update_gallery(gallery_id):
     if 'file' in request.files:
         file = request.files['file']
         if file.filename != '':
-            s3_url = upload_file_to_s3(file, f"{Gallery.__tablename__}/{gallery.id}")
+            s3_url = upload_file_to_s3(file, Gallery.__tablename__)
             gallery.picture = s3_url
 
     gallery.save()
