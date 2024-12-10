@@ -1,0 +1,100 @@
+/* Menubar.css */
+
+/* General Menubar Styling */
+.menubar {
+    position: fixed;
+    top: 48px;
+    left: 0;
+    width: 100%;
+    background-color: rgb(0, 0, 0, .5);
+    color: white;
+    z-index: 994;
+    padding: 22px 166px;
+    border-top: 1px solid #ffffff4a;
+    border-bottom: 1px solid #ffffff4a;
+    display: flex;
+    align-items: center;
+}
+
+.nav {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.nav-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    column-gap: 52px;
+}
+
+.nav-item {
+    margin: 0 20px;
+    cursor: pointer;
+    font-size: 16px;
+    color: white;
+    transition: color 0.3s;
+}
+
+.nav-item:hover {
+    opacity: .5;
+}
+
+/* Progress Bar */
+.progress {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    background: #ffff;
+    transition: width 0.2s ease-out;
+    border-radius: 0;
+}
+
+.icon-menu {
+    display: none;
+}
+
+.menubar .logo-white {
+    display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .nav {
+        font-size: 14px;
+        background-color: transparent
+    }
+
+    .menubar {
+        background-color: transparent;
+        justify-content: space-between;
+        padding: 22px;
+    }
+
+    .nav-list {
+        display: none;
+    }
+
+    .nav-item {
+        margin: 0 10px;
+    }
+
+    .progress {
+        display: block;
+        background: hsla(0, 0%, 100%, .1);
+    }
+
+    .icon-menu {
+        display: block;
+        cursor: pointer;
+    }
+
+    .menubar .logo-white {
+        display: block;
+    }
+}
