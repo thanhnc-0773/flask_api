@@ -30,9 +30,9 @@ def create_app():
 
     with app.app_context():
         from app.routes import artist_routes, team_routes, gallery_routes
-        app.register_blueprint(artist_routes.bp, url_prefix='/artists')
-        app.register_blueprint(team_routes.bp, url_prefix='/teams')
-        app.register_blueprint(gallery_routes.bp, url_prefix='/galleries')
+        app.register_blueprint(artist_routes.bp, url_prefix='/api/artists')
+        app.register_blueprint(team_routes.bp, url_prefix='/api/teams')
+        app.register_blueprint(gallery_routes.bp, url_prefix='/api/galleries')
 
     return app
 
@@ -44,7 +44,7 @@ def page_not_found(e):
 
 @app.route('/')
 def redirect_to_artists():
-    return redirect('/artists')
+    return redirect('/api/artists')
 
 if __name__ == '__main__':
     app.run(debug=True)
