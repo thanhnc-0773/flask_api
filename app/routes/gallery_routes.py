@@ -108,22 +108,41 @@ def create_gallery():
             },
             'collectionFormat': 'multi',
             'description': 'Fields to order by in the format field:direction'
+        },
+        {
+            'name': 'page',
+            'in': 'query',
+            'type': 'integer',
+            'description': 'Page number for pagination'
+        },
+        {
+            'name': 'per_page',
+            'in': 'query',
+            'type': 'integer',
+            'description': 'Number of items per page for pagination'
         }
     ],
     'responses': {
         200: {
             'description': 'List of gallery items',
             'schema': {
-                'type': 'array',
-                'items': {
-                    'type': 'object',
-                    'properties': {
-                        'id': {'type': 'integer'},
-                        'artist_id': {'type': 'integer'},
-                        'picture': {'type': 'string'},
-                        'show_on_top': {'type': 'boolean'},
-                        'created_at': {'type': 'string', 'format': 'date-time'},
-                        'updated_at': {'type': 'string', 'format': 'date-time'}
+                'type': 'object',
+                'properties': {
+                    'current_page': {'type': 'integer'},
+                    'total_pages': {'type': 'integer'},
+                    'datas': {
+                        'type': 'array',
+                        'items': {
+                            'type': 'object',
+                            'properties': {
+                                'id': {'type': 'integer'},
+                                'artist_id': {'type': 'integer'},
+                                'picture': {'type': 'string'},
+                                'show_on_top': {'type': 'boolean'},
+                                'created_at': {'type': 'string', 'format': 'date-time'},
+                                'updated_at': {'type': 'string', 'format': 'date-time'}
+                            }
+                        }
                     }
                 }
             }
@@ -152,8 +171,18 @@ def get_galleries():
         field_name, direction = field.split(':')
         order_by.append((field_name, direction))
     
-    galleries = Gallery.list(filters, order_by)
-    return jsonify([gallery.to_dict() for gallery in galleries])
+    page = int(request.args.get('page', 1))
+    per_page = int(request.args.get('per_page', 10))
+    
+    galleries, total = Gallery.paginate(filters, order_by, page, per_page)
+    total_pages = (total + per_page - 1) // per_page
+    
+    return jsonify({
+        'current_page': page,
+        'total_pages': total_pages,
+        'datas': [gallery.to_dict() for gallery in galleries]
+    }), 200
+
 
 
 @bp.route('/<int:gallery_id>', methods=['GET'])

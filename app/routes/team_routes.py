@@ -85,6 +85,20 @@ def create_team():
     'tags': ['Teams'],
     'parameters': [
         {
+            'name': 'page',
+            'in': 'query',
+            'type': 'integer',
+            'required': False,
+            'description': 'Page number for pagination'
+        },
+        {
+            'name': 'per_page',
+            'in': 'query',
+            'type': 'integer',
+            'required': False,
+            'description': 'Number of items per page for pagination'
+        },
+        {
             'name': 'name',
             'in': 'query',
             'type': 'string',
@@ -120,18 +134,25 @@ def create_team():
     ],
     'responses': {
         200: {
-            'description': 'List of teams',
+            'description': 'List of teams with pagination',
             'schema': {
-                'type': 'array',
-                'items': {
-                    'type': 'object',
-                    'properties': {
-                        'id': {'type': 'integer'},
-                        'name': {'type': 'string'},
-                        'description': {'type': 'string'},
-                        'position': {'type': 'varchar'},
-                        'created_at': {'type': 'string', 'format': 'date-time'},
-                        'updated_at': {'type': 'string', 'format': 'date-time'}
+                'type': 'object',
+                'properties': {
+                    'current_page': {'type': 'integer'},
+                    'total_pages': {'type': 'integer'},
+                    'datas': {
+                        'type': 'array',
+                        'items': {
+                            'type': 'object',
+                            'properties': {
+                                'id': {'type': 'integer'},
+                                'name': {'type': 'string'},
+                                'description': {'type': 'string'},
+                                'position': {'type': 'varchar'},
+                                'created_at': {'type': 'string', 'format': 'date-time'},
+                                'updated_at': {'type': 'string', 'format': 'date-time'}
+                            }
+                        }
                     }
                 }
             }
@@ -160,8 +181,16 @@ def get_teams():
         field_name, direction = field.split(':')
         order_by.append((field_name, direction))
     
-    teams = Team.list(filters, order_by)
-    return jsonify([team.to_dict() for team in teams])
+    page = int(request.args.get('page', 1))
+    per_page = int(request.args.get('per_page', 10))
+    
+    teams, total_pages = Team.paginate(filters, order_by, page, per_page)
+    
+    return jsonify({
+        'current_page': page,
+        'total_pages': total_pages,
+        'datas': [team.to_dict() for team in teams]
+    }), 200
 
 
 @bp.route('/<int:team_id>', methods=['GET'])
