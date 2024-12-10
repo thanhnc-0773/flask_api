@@ -12,39 +12,6 @@ class ModelBase(db.Model):
         return cls.query.get(record_id)
 
     @classmethod
-    def list(cls, filters=None, order_by=None):
-        query = cls.query
-        if filters:
-            for attr, condition in filters.items():
-                if isinstance(condition, dict):
-                    for op, value in condition.items():
-                        if op == '==':
-                            query = query.filter(getattr(cls, attr) == value)
-                        elif op == '!=':
-                            query = query.filter(getattr(cls, attr) != value)
-                        elif op == '<':
-                            query = query.filter(getattr(cls, attr) < value)
-                        elif op == '>':
-                            query = query.filter(getattr(cls, attr) > value)
-                        elif op == '<=':
-                            query = query.filter(getattr(cls, attr) <= value)
-                        elif op == '>=':
-                            query = query.filter(getattr(cls, attr) >= value)
-                        elif op == 'like':
-                            query = query.filter(getattr(cls, attr).like(value))
-                        elif op == 'ilike':
-                            query = query.filter(getattr(cls, attr).ilike(value))
-                else:
-                    query = query.filter(getattr(cls, attr) == condition)
-        if order_by:
-            for field, direction in order_by:
-                if direction == 'asc':
-                    query = query.order_by(asc(field))
-                elif direction == 'desc':
-                    query = query.order_by(desc(field))
-        return query.all()
-
-    @classmethod
     def create(cls, data):
         cls.validate(data)
         new_record = cls(**data)
@@ -71,6 +38,39 @@ class ModelBase(db.Model):
         with self.transaction():
             db.session.commit()
         return self
+
+    @classmethod
+    def paginate(self, page, per_page, filters=None, order_by=None):
+        query = self.query
+        if filters:
+            for attr, condition in filters.items():
+                if isinstance(condition, dict):
+                    for op, value in condition.items():
+                        if op == '==':
+                            query = query.filter(getattr(self, attr) == value)
+                        elif op == '!=':
+                            query = query.filter(getattr(self, attr) != value)
+                        elif op == '<':
+                            query = query.filter(getattr(self, attr) < value)
+                        elif op == '>':
+                            query = query.filter(getattr(self, attr) > value)
+                        elif op == '<=':
+                            query = query.filter(getattr(self, attr) <= value)
+                        elif op == '>=':
+                            query = query.filter(getattr(self, attr) >= value)
+                        elif op == 'like':
+                            query = query.filter(getattr(self, attr).like(value))
+                        elif op == 'ilike':
+                            query = query.filter(getattr(self, attr).ilike(value))
+                else:
+                    query = query.filter(getattr(self, attr) == condition)
+        if order_by:
+            for field, direction in order_by:
+                if direction == 'asc':
+                    query = query.order_by(asc(field))
+                elif direction == 'desc':
+                    query = query.order_by(desc(field))
+        return query.paginate(page, per_page, False).items
 
     def delete(self):
         with self.transaction():
