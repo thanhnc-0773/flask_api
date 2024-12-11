@@ -329,7 +329,12 @@ def get_gallery_images(gallery_id):
 
     return jsonify({
         'artist': artist.to_dict(),
-        'pictures': [{'picture': get_presign_url_from_s3(g.picture, location=f"Galleries/{g.id}")} for g in artist_galleries if g.picture]
+        'pictures': [
+            {
+                'id': g.id,
+                'picture': get_presign_url_from_s3(g.picture, location=f"Galleries/{g.id}")
+            } for g in artist_galleries if g.picture
+        ]
     }), 200
 
 
