@@ -210,13 +210,14 @@ def get_artists():
         field_name, direction = field.split(':')
         order_by.append((field_name, direction))
     
-    artists, total = Artist.paginate(page, per_page, filters, order_by)
+    artists, total, total_records = Artist.paginate(page, per_page, filters, order_by)
     total_pages = (total + per_page - 1) // per_page
 
     return jsonify({
         'current_page': page,
         'total_pages': total_pages,
-        'datas': [artist.to_dict() for artist in artists]
+        'datas': [artist.to_dict() for artist in artists],
+        'total_records': total_records
     })
 
 
@@ -304,7 +305,10 @@ def get_artist_images(artist_id):
     result = [
         {'picture': get_presign_url_from_s3(g.picture, location=f"Galerries/{g.id}")} for g in artist.galleries() if g.picture]
 
-    return jsonify(result), 200
+    return jsonify({
+        'artist': artist.to_dict(),
+        'pictures': result
+        }), 200
 
 
 @bp.route('/<int:artist_id>', methods=['PUT'])

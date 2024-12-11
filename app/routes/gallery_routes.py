@@ -174,12 +174,13 @@ def get_galleries():
     page = int(request.args.get('page', 1))
     per_page = int(request.args.get('per_page', 10))
     
-    galleries, total = Gallery.paginate(page, per_page, filters, order_by)
+    galleries, total, total_records = Gallery.paginate(page, per_page, filters, order_by)
     total_pages = (total + per_page - 1) // per_page
     
     return jsonify({
         'current_page': page,
         'total_pages': total_pages,
+        'total_records': total_records,
         'datas': [gallery.to_dict() for gallery in galleries]
     }), 200
 
@@ -326,9 +327,10 @@ def get_gallery_images(gallery_id):
 
     artist_galleries = artist.galleries()
 
-    return jsonify([
-        {'picture': get_presign_url_from_s3(g.picture, location="Galerries")} for g in artist_galleries if g.picture]
-    ), 200
+    return jsonify({
+        'artist': artist.to_dict(),
+        'pictures': [{'picture': get_presign_url_from_s3(g.picture, location="Galerries")} for g in artist_galleries if g.picture]
+    }), 200
 
 
 

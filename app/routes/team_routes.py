@@ -184,11 +184,12 @@ def get_teams():
     page = int(request.args.get('page', 1))
     per_page = int(request.args.get('per_page', 10))
     
-    teams, total_pages = Team.paginate(page, per_page, filters, order_by)
+    teams, total_pages, total_records = Team.paginate(page, per_page, filters, order_by)
     
     return jsonify({
         'current_page': page,
         'total_pages': total_pages,
+        'total_records': total_records,
         'datas': [team.to_dict() for team in teams]
     }), 200
 

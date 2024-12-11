@@ -42,6 +42,7 @@ class ModelBase(db.Model):
     @classmethod
     def paginate(self, page, per_page, filters, order_by):
         query = self.query
+        total_records = query.count()
         if filters:
             for attr, condition in filters.items():
                 if isinstance(condition, dict):
@@ -74,7 +75,7 @@ class ModelBase(db.Model):
 
         total = query.count()
 
-        return records, total
+        return records, total, total_records
 
     def delete(self):
         with self.transaction():
