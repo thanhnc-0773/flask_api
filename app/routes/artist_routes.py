@@ -84,22 +84,22 @@ def create_artist():
         parsed_url = urlparse(link_x)
         if not all([parsed_url.scheme, parsed_url.netloc]):
             return jsonify({'error': 'Invalid URL format for link_x'}), 400
-        
-    if 'file' in request.files:
-        file = request.files['file']
-        if file.filename != '':
-            s3_url = upload_file_to_s3(file, location=Artist.__tablename__)
 
     data = {
         'name': name,
         'style': style,
         'link_x': link_x,
-        'x_tag': x_tag,
-        'avatar': s3_url
+        'x_tag': x_tag
     }
 
     try:
         new_artist = Artist.create(data)
+        if 'avatar' in request.files:
+            file = request.files['avatar']
+            if file.filename != '':
+                s3_url = upload_file_to_s3(file, location=f"{Artist.__tablename__}/{new_artist.id}")
+                new_artist.avatar = s3_url
+                new_artist.save()
         return jsonify(new_artist.to_dict()), 201
     except ValueError as e:
         return jsonify({'error': str(e)}), 400
@@ -302,7 +302,7 @@ def get_artist_images(artist_id):
         return jsonify({'error': 'Artist not found'}), 404
 
     result = [
-        {'picture': get_presign_url_from_s3(g.picture, location="Galerries")} for g in artist.galleries() if g.picture]
+        {'picture': get_presign_url_from_s3(g.picture, location=f"Galerries/{g.id}")} for g in artist.galleries() if g.picture]
 
     return jsonify(result), 200
 
@@ -382,10 +382,10 @@ def update_artist(artist_id):
         return jsonify({'error': 'Artist not found'}), 404
 
     
-    if 'file' in request.files:
-        file = request.files['file']
+    if 'avatar' in request.files:
+        file = request.files['avatar']
         if file.filename != '':
-            s3_url = upload_file_to_s3(file, location=Artist.__tablename__)
+            s3_url = upload_file_to_s3(file, location=f"{Artist.__tablename__}/{artist_id}")
             artist.avatar = s3_url
 
     artist.save()

@@ -99,7 +99,7 @@ class ModelBase(db.Model):
             if isinstance(value, datetime):
                 value = value.isoformat()
             if column.name in ['avatar', 'picture'] and value:
-                value = get_presign_url_from_s3(value, location=self.__tablename__)
+                value = get_presign_url_from_s3(value, location=f"{self.__tablename__}/{self.id}")
             result[column.name] = value
         return result
 

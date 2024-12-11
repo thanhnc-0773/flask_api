@@ -64,10 +64,10 @@ def create_gallery():
 
     try:
         new_gallery = Gallery.create(data)
-        if 'file' in request.files:
-            file = request.files['file']
+        if 'avatar' in request.files:
+            file = request.files['avatar']
             if file.filename != '':
-                s3_url = upload_file_to_s3(file, Gallery.__tablename__)
+                s3_url = upload_file_to_s3(file, f"{Gallery.__tablename__}/{new_gallery.id}")
                 new_gallery.picture = s3_url
                 new_gallery.save()
         return jsonify(new_gallery.to_dict()), 201
@@ -279,10 +279,10 @@ def update_gallery(gallery_id):
     show_on_top = request.form.get('show_on_top', 'false').lower() == 'true'
     gallery.show_on_top = show_on_top
 
-    if 'file' in request.files:
-        file = request.files['file']
+    if 'avatar' in request.files:
+        file = request.files['avatar']
         if file.filename != '':
-            s3_url = upload_file_to_s3(file, Gallery.__tablename__)
+            s3_url = upload_file_to_s3(file, f"{Gallery.__tablename__}/{gallery.id}")
             gallery.picture = s3_url
 
     gallery.save()
