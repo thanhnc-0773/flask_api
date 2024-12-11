@@ -9,5 +9,5 @@ export const MENU_ARRAY: MenuItem[] = [
   { title: "Home", url: routesName.ROOT },
   { title: "Gallery", url: routesName.GALLERY },
   { title: "Order", url: routesName.ROOT },
-  { title: "About", url: routesName.ROOT },
+  { title: "About", url: routesName.ABOUT },
 ];

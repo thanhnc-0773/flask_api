@@ -26,7 +26,10 @@ code {
   --grey-color: #454545;
   --white-color: #ffffff;
   --vision-blue: rgb(66, 143, 247);
-  --red-color: rgb(250, 84, 84)
+  --red-color: rgb(250, 84, 84);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 15px hsla(0, 0%, 100%, .42);
 }
 
 ::-webkit-scrollbar {
