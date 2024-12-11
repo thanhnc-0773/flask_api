@@ -1,7 +1,7 @@
 export type DetailArtist = {
   id: string;
   name: string;
-  x_link: string;
+  link_x: string;
   style: string;
   avatar: string;
   x_tag: string;

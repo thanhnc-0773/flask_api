@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useRef } from "react";
+import { useAppSelector } from "src/app/appHooks";
 import { useHandleScroll } from "../Home/hooks/useHandleScroll";
 import GalleryTemplate from "./GalleryTemplate";
 import { GalleryContextProvider } from "./context";
@@ -7,14 +8,60 @@ import { useGallery } from "./hooks/useGallery";
 import { useGalleryAction } from "./hooks/useGalleryAction";
 
 const GalleryPage: React.FC = () => {
+  const { loading } = useAppSelector((state) => state.app);
+
+  const isFirstMount = useRef<{ gallery: boolean; artist: boolean }>({ gallery: true, artist: true });
+
   const { scrollPosition } = useHandleScroll();
-  const { tab, handleChangeTab } = useGalleryAction();
-  const { listArtist, onSelectArtist } = useArtistList();
-  const { images, isLoading, observerRef } = useGallery({ tab });
+  const {
+    tab,
+    page,
+    totalPage,
+    modalPreview,
+    selectedIndex,
+    onCloseModal,
+    onSelectArtist,
+    onSelectGallery,
+    handleChangeTab,
+    handleChangePage,
+    handleChangeTotal,
+  } = useGalleryAction();
+  const { listArtist, totalArtist } = useArtistList({
+    tab,
+    page,
+    totalPage,
+    isFirstMount,
+    handleChangePage,
+    handleChangeTotal,
+  });
+  const { images, totalGallery, observerRef } = useGallery({
+    tab,
+    page,
+    loading,
+    totalPage,
+    isFirstMount,
+    handleChangePage,
+    handleChangeTotal,
+  });
 
   return (
     <GalleryContextProvider
-      value={{ tab: tab, images, isLoading, listArtist, observerRef, scrollPosition, onSelectArtist, handleChangeTab }}
+      value={{
+        tab: tab,
+        images,
+        loading,
+        listArtist,
+        observerRef,
+        totalArtist,
+        modalPreview,
+        totalGallery,
+        selectedIndex,
+        scrollPosition,
+        onCloseModal,
+        onSelectArtist,
+        handleChangeTab,
+        onSelectGallery,
+      }}
     >
       <GalleryTemplate />
     </GalleryContextProvider>

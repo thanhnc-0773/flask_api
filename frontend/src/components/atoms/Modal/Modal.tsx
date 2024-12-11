@@ -4,7 +4,7 @@ import "./Modal.css";
 
 const ModalBase: React.FC<
   ModalProps & {
-    title?: string;
+    titleModal?: string | React.ReactNode;
     isShow?: boolean;
     footer?: React.ReactNode;
     closeText?: string;
@@ -39,7 +39,7 @@ const ModalBase: React.FC<
       onBackdropClick={props?.onClose}
     >
       <Modal.Header closeButton>
-        <Modal.Title>{props?.title ?? ""}</Modal.Title>
+        <Modal.Title>{typeof props?.titleModal === "string" ? props.titleModal : props.titleModal ?? ""}</Modal.Title>
       </Modal.Header>
       <Modal.Body>{props?.children}</Modal.Body>
       {props?.isShowFooter ? (
