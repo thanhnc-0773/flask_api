@@ -5,8 +5,10 @@ import { ImageList } from "../Gallery.type";
 export interface GalleryContextProps {
   tab: string;
   images: ImageList[];
-  isLoading: boolean;
+  loading: boolean;
   listArtist: DetailArtist[];
+  totalArtist: number;
+  totalGallery: number;
   observerRef: React.MutableRefObject<HTMLDivElement | null>;
   scrollPosition: number;
   onSelectArtist: (id: string) => void;

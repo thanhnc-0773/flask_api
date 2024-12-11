@@ -47,7 +47,7 @@ const ModalPreviewImage: React.FC<Props> = ({ images, initialIndex = 0 }) => {
       >
         {images.map((image, index) => (
           <Carousel.Item key={index}>
-            <img className="d-block w-100 image-preview" src={image.src} alt={image.alt || `Image ${index + 1}`} />
+            <img className="d-block w-100 image-preview" src={image.picture} alt={`img ${image.id}}`} />
           </Carousel.Item>
         ))}
       </Carousel>

@@ -1,21 +1,21 @@
-import { DetailArtist } from "src/components/atoms/Artist/Artist.type";
+import { ImageList } from "src/components/pages/Gallery/Gallery.type";
 import { endpoint } from "src/const/endpoint";
 import httpRequest from "src/utilities/services/httpRequest";
 
 export type ListArtistType = {
   current_page: number;
-  datas: DetailArtist[];
+  datas: ImageList[];
   total_pages: number;
   total_records: number;
 };
 
-export type ListArtistAPIParams = {
+export type ListGalleryAPIParams = {
   page: number;
 };
 
-export function getListArtist(params: ListArtistAPIParams) {
+export function getListGallery(params: ListGalleryAPIParams) {
   const stringParams = Object.fromEntries(Object.entries(params).map(([key, value]) => [key, String(value)]));
   const searchParams = new URLSearchParams(stringParams).toString();
 
-  return httpRequest.get<ListArtistType>(`${endpoint.artist}?${searchParams}`);
+  return httpRequest.get<ListArtistType>(`${endpoint.gallery}?${searchParams}`);
 }
