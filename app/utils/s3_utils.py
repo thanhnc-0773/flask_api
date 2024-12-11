@@ -20,7 +20,7 @@ def upload_file_to_s3(file, location):
     s3.upload_file(file_path, S3_BUCKET_NAME, filename)
     s3_url = f"https://{S3_BUCKET_NAME}.s3.amazonaws.com/{location}/{filename}"
     os.remove(file_path)
-    return s3_url
+    return filename
 
 
 def get_presign_url_from_s3(file_name, location):
