@@ -17,9 +17,15 @@ def upload_file_to_s3(file, location):
     filename = secure_filename(file.filename)
     file_path = os.path.join('/tmp', filename)
     file.save(file_path)
-    s3.upload_file(file_path, S3_BUCKET_NAME, filename)
-    s3_url = f"https://{S3_BUCKET_NAME}.s3.amazonaws.com/{location}/{filename}"
+    try:
+        s3.upload_file(file_path, S3_BUCKET_NAME, filename)
+        print(f"File {file_path} uploaded to {S3_BUCKET_NAME}/{filename}")
+    except Exception as e:
+        print(f"Failed to upload {file_path} to S3: {e}")
+        return False
+    
     os.remove(file_path)
+
     return filename
 
 
