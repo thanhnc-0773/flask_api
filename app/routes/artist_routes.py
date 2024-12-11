@@ -302,7 +302,7 @@ def get_artist_images(artist_id):
         return jsonify({'error': 'Artist not found'}), 404
 
     result = [
-        {'picture': get_presign_url_from_s3(g.picture, location="Galerries")} for g in artist.galleries()]
+        {'picture': get_presign_url_from_s3(g.picture, location="Galerries")} for g in artist.galleries() if g.picture]
 
     return jsonify(result), 200
 
