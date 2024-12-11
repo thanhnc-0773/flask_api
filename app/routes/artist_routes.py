@@ -301,7 +301,7 @@ def get_artist_images(artist_id):
     if not artist:
         return jsonify({'error': 'Artist not found'}), 404
 
-    galleries = artist.galleries
+    galleries = artist.galleries()
     result = []
     for gallery in galleries:
         pictures = [picture.url for picture in gallery.pictures if picture.url]

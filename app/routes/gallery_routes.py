@@ -289,6 +289,47 @@ def update_gallery(gallery_id):
     return jsonify(gallery.to_dict()), 200
 
 
+@bp.route('/<int:gallery_id>/images', methods=['GET'])
+@swag_from({
+    'tags': ['Galleries'],
+    'responses': {
+        200: {
+            'description': 'List of images for the gallery item',
+            'schema': {
+                'type': 'array',
+                'items': {
+                    'type': 'object',
+                    'properties': {
+                        'id': {'type': 'integer'},
+                        'artist_id': {'type': 'integer'},
+                        'picture': {'type': 'string'},
+                        'show_on_top': {'type': 'boolean'},
+                        'created_at': {'type': 'string', 'format': 'date-time'},
+                        'updated_at': {'type': 'string', 'format': 'date-time'}
+                    }
+                }
+            }
+        },
+        404: {
+            'description': 'Gallery item not found'
+        }
+    }
+})
+def get_gallery_images(gallery_id):
+    gallery = Gallery.query.get(gallery_id)
+    if not gallery:
+        return jsonify({'error': 'Gallery item not found'}), 404
+
+    artist = gallery.artist
+    if not artist:
+        return jsonify({'error': 'Artist not found'}), 404
+
+    artist_galleries = artist.galleries()
+    images = [{'picture': g.picture} for g in artist_galleries]
+    return jsonify(images), 200
+
+
+
 @bp.route('/<int:gallery_id>', methods=['DELETE'])
 @swag_from({
     'tags': ['Galleries'],
