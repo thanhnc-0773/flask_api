@@ -161,3 +161,5 @@ class Gallery(ModelBase):
         if 'artist_id' not in data or not data['artist_id']:
             raise ValueError("Artist ID is required")
 
+    def artist(self):
+        return Artist.query.get(self.artist_id)

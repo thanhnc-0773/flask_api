@@ -321,7 +321,7 @@ def get_gallery_images(gallery_id):
     if not gallery:
         return jsonify({'error': 'Gallery item not found'}), 404
 
-    artist = gallery.artist
+    artist = gallery.artist()
     if not artist:
         return jsonify({'error': 'Artist not found'}), 404
 
