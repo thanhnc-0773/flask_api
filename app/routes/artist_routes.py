@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from app.models import Artist
-from app.utils.s3_utils import upload_file_to_s3
+from app.utils.s3_utils import upload_file_to_s3, get_presign_url_from_s3
 from flasgger import swag_from
 from datetime import datetime
 from urllib.parse import urlparse
@@ -301,15 +301,8 @@ def get_artist_images(artist_id):
     if not artist:
         return jsonify({'error': 'Artist not found'}), 404
 
-    galleries = artist.galleries()
-    result = []
-    for gallery in galleries:
-        pictures = [picture.url for picture in gallery.pictures if picture.url]
-        if pictures:
-            result.append({
-                'gallery_id': gallery.id,
-                'pictures': pictures
-            })
+    result = [
+        {'picture': get_presign_url_from_s3(g.picture, location="Galerries")} for g in artist.galleries()]
 
     return jsonify(result), 200
 
