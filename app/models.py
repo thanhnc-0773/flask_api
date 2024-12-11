@@ -149,7 +149,7 @@ class Gallery(ModelBase):
     __tablename__ = 'Galleries'
 
     id = db.Column(db.Integer, primary_key=True)
-    artist_id = db.Column(db.Integer, db.ForeignKey('Artist.id'), nullable=False)
+    artist_id = db.Column(db.Integer, db.ForeignKey('Artists.id'), nullable=False)
     picture = db.Column(db.String(255), nullable=False)
     show_on_top = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.now())
