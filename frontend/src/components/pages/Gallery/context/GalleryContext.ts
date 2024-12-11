@@ -1,6 +1,6 @@
 import React from "react";
 import { DetailArtist } from "src/components/atoms/Artist/Artist.type";
-import { ImageList } from "../Gallery.type";
+import { ImageList, ModalPreviewState } from "../Gallery.type";
 
 export interface GalleryContextProps {
   tab: string;
@@ -8,10 +8,14 @@ export interface GalleryContextProps {
   loading: boolean;
   listArtist: DetailArtist[];
   totalArtist: number;
+  modalPreview: ModalPreviewState;
   totalGallery: number;
   observerRef: React.MutableRefObject<HTMLDivElement | null>;
+  selectedIndex: number;
   scrollPosition: number;
+  onCloseModal: () => void;
   onSelectArtist: (id: string) => void;
+  onSelectGallery: (id: string) => void;
   handleChangeTab: (tab: string) => void;
 }
 

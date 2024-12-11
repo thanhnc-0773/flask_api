@@ -1,6 +1,6 @@
 import React from "react";
-import { DetailArtist, DetailMember } from "./Artist.type";
 import "./Artist.css";
+import { DetailArtist, DetailMember } from "./Artist.type";
 
 type Props = {
   detailArtist?: DetailArtist;
@@ -16,7 +16,7 @@ const Artist: React.FC<Props> = ({ type, detailMember, detailArtist, onSelectArt
   const name = isArtist ? detailArtist?.name : detailMember?.name;
   const linkProfile = isArtist ? detailArtist?.x_tag : detailMember?.position;
   const description = isArtist ? detailArtist?.style : detailMember?.description;
-  const link = isArtist ? detailArtist?.x_link : undefined;
+  const link = isArtist ? detailArtist?.link_x : undefined;
 
   const clickXLink = (x: string) => {
     window.open(x, "_blank", "noopener,noreferrer");

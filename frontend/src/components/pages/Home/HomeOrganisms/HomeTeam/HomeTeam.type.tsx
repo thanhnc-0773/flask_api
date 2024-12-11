@@ -1,5 +1,5 @@
-import { DetailArtist, DetailMember } from "src/components/atoms/Artist/Artist.type";
 import img from "src/assets/images/daisuke.webp";
+import { DetailArtist, DetailMember } from "src/components/atoms/Artist/Artist.type";
 
 export const mockListTeam: DetailMember[] = [
   {
@@ -74,7 +74,7 @@ export const mockListArtist: DetailArtist[] = [
     name: "Michael",
     style: "Anime",
     avatar: img,
-    x_link: "https://x.com/",
+    link_x: "https://x.com/",
     x_tag: "@michael",
   },
   {
@@ -82,7 +82,7 @@ export const mockListArtist: DetailArtist[] = [
     name: "Michael",
     style: "Anime",
     avatar: img,
-    x_link: "https://x.com/",
+    link_x: "https://x.com/",
     x_tag: "@michael",
   },
   {
@@ -90,7 +90,7 @@ export const mockListArtist: DetailArtist[] = [
     name: "Michael",
     style: "Anime",
     avatar: img,
-    x_link: "https://x.com/",
+    link_x: "https://x.com/",
     x_tag: "@michael",
   },
   {
@@ -98,7 +98,7 @@ export const mockListArtist: DetailArtist[] = [
     name: "Michael",
     style: "Anime",
     avatar: img,
-    x_link: "https://x.com/",
+    link_x: "https://x.com/",
     x_tag: "@michael",
   },
   {
@@ -106,7 +106,7 @@ export const mockListArtist: DetailArtist[] = [
     name: "Michael",
     style: "Anime",
     avatar: img,
-    x_link: "https://x.com/",
+    link_x: "https://x.com/",
     x_tag: "@michael",
   },
   {
@@ -114,7 +114,7 @@ export const mockListArtist: DetailArtist[] = [
     name: "Michael",
     style: "Anime",
     avatar: img,
-    x_link: "https://x.com/",
+    link_x: "https://x.com/",
     x_tag: "@michael",
   },
   {
@@ -122,7 +122,7 @@ export const mockListArtist: DetailArtist[] = [
     name: "Michael",
     style: "Anime",
     avatar: img,
-    x_link: "https://x.com/",
+    link_x: "https://x.com/",
     x_tag: "@michael",
   },
   {
@@ -130,7 +130,7 @@ export const mockListArtist: DetailArtist[] = [
     name: "Michael",
     style: "Anime",
     avatar: img,
-    x_link: "https://x.com/",
+    link_x: "https://x.com/",
     x_tag: "@michael",
   },
   {
@@ -138,7 +138,7 @@ export const mockListArtist: DetailArtist[] = [
     name: "Michael",
     style: "Anime",
     avatar: img,
-    x_link: "https://x.com/",
+    link_x: "https://x.com/",
     x_tag: "@michael",
   },
   {
@@ -146,7 +146,7 @@ export const mockListArtist: DetailArtist[] = [
     name: "Michael",
     style: "Anime",
     avatar: img,
-    x_link: "https://x.com/",
+    link_x: "https://x.com/",
     x_tag: "@michael",
   },
   {
@@ -154,7 +154,7 @@ export const mockListArtist: DetailArtist[] = [
     name: "Michael",
     style: "Anime",
     avatar: img,
-    x_link: "https://x.com/",
+    link_x: "https://x.com/",
     x_tag: "@michael",
   },
   {
@@ -162,7 +162,7 @@ export const mockListArtist: DetailArtist[] = [
     name: "Michael",
     style: "Anime",
     avatar: img,
-    x_link: "https://x.com/",
+    link_x: "https://x.com/",
     x_tag: "@michael",
   },
   {
@@ -170,7 +170,7 @@ export const mockListArtist: DetailArtist[] = [
     name: "Michael",
     style: "Anime",
     avatar: img,
-    x_link: "https://x.com/",
+    link_x: "https://x.com/",
     x_tag: "@michael",
   },
 ];

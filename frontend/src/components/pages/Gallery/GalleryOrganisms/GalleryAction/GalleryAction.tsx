@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
-import "./GalleryAction.css";
 import { Tab, Tabs } from "react-bootstrap";
-import GalleryList from "../GalleryList";
-import ArtistList from "../ArtistList";
 import { GalleryContext } from "../../context";
+import ArtistList from "../ArtistList";
+import GalleryList from "../GalleryList";
+import "./GalleryAction.css";
 
 const GalleryAction: React.FC = () => {
-  const { tab, totalArtist, totalGallery, handleChangeTab } = useContext(GalleryContext);
+  const { tab, loading, totalArtist, observerRef, totalGallery, handleChangeTab } = useContext(GalleryContext);
   return (
     <div className="gallery-action-container">
       <Tabs activeKey={tab} onSelect={(tab) => tab && handleChangeTab(tab)}>
@@ -14,7 +14,7 @@ const GalleryAction: React.FC = () => {
           eventKey="Gallery"
           title={
             <>
-              Gallery <span style={{ fontSize: "15px" }}>({totalArtist})</span>
+              Gallery <span style={{ fontSize: "15px" }}>({totalGallery})</span>
             </>
           }
         >
@@ -24,13 +24,16 @@ const GalleryAction: React.FC = () => {
           eventKey="Artist"
           title={
             <>
-              Artist <span style={{ fontSize: "15px" }}>({totalGallery})</span>
+              Artist <span style={{ fontSize: "15px" }}>({totalArtist})</span>
             </>
           }
         >
           <ArtistList />
         </Tab>
       </Tabs>
+
+      {loading && <div className="loading">Loading...</div>}
+      <div ref={observerRef} className="observer-trigger"></div>
     </div>
   );
 };

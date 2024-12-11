@@ -1,13 +1,24 @@
 import React, { useContext } from "react";
+import ModalBase from "src/components/atoms/Modal";
+import ModalPreviewImage from "src/components/atoms/Modal/ModalPreviewImage";
+import { GalleryContext } from "../context";
 import GalleryAction from "../GalleryOrganisms/GalleryAction";
 import GalleryBanner from "../GalleryOrganisms/GalleryBanner";
 import "./GalleryTemplate.css";
-import ModalBase from "src/components/atoms/Modal";
-import { GalleryContext } from "../context";
-import ModalPreviewImage from "src/components/atoms/Modal/ModalPreviewImage";
 
 const GalleryTemplate: React.FC = () => {
-  const { images } = useContext(GalleryContext);
+  const { modalPreview, selectedIndex, onCloseModal } = useContext(GalleryContext);
+
+  const renderTitle = () => {
+    const onClickArtist = () => window.open(modalPreview.detailArtist.link_x, "_blank", "noopener,noreferrer");
+
+    return (
+      <div className="artist-preview-container" onClick={() => onClickArtist()}>
+        <img src={modalPreview.detailArtist.avatar} alt={modalPreview.detailArtist.name} />
+        <div className="artist-preview-name">{modalPreview.detailArtist.name}</div>
+      </div>
+    );
+  };
 
   return (
     <div className="gallery-template">
@@ -16,13 +27,13 @@ const GalleryTemplate: React.FC = () => {
       <GalleryAction />
 
       <ModalBase
-        isShow={false}
+        isShow={modalPreview.isShow}
         size="xl"
-        onClose={() => {
-          console.log("close");
-        }}
+        onClose={() => onCloseModal()}
+        onBackdropClick={() => onCloseModal()}
+        titleModal={renderTitle()}
       >
-        <ModalPreviewImage images={images} initialIndex={19} />
+        <ModalPreviewImage images={modalPreview.imageList} initialIndex={selectedIndex} />
       </ModalBase>
     </div>
   );

@@ -23,7 +23,9 @@ const AboutDetail: React.FC = () => {
       <div className="about-detail-bottom">
         <div className="about-detail-bottom-left">
           <div className="bottom-left-text">
-            <div className="des-top">DESIGN CONCEPT</div>
+            <div className="des-top" style={{ lineHeight: "unset" }}>
+              DESIGN CONCEPT
+            </div>
             <div className="des-bottom" style={{ margin: 0 }}>
               Every NFT within this collection is procedurally crafted using 18 distinct animated assets as its
               foundation

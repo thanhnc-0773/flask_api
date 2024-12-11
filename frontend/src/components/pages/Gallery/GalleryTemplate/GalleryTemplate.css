@@ -2,3 +2,30 @@
     display: flex;
     flex-direction: column;
 }
+
+.artist-preview-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    cursor: pointer;
+}
+
+.artist-preview-container img {
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    margin-right: 8px;
+}
+
+.artist-preview-name {
+    color: var(--white-color);
+    font-weight: 500;
+}
+
+.artist-preview-name:hover {
+    opacity: .8;
+}
+
+.modal-base-container:has(.modal-preview-container) .modal-header {
+    border: none !important;
+}

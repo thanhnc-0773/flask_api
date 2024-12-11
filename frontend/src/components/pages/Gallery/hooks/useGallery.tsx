@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getListGallery } from "src/apis/galleries/getGallery";
-import { useAppDispatch, useAppSelector } from "src/app/appHooks";
+import { useAppDispatch } from "src/app/appHooks";
 import { setState } from "src/slices/appSlice";
 import { ImageList } from "../Gallery.type";
 
@@ -9,11 +9,23 @@ type Props = {
   page: number;
   loading: boolean;
   totalPage: number;
+  isFirstMount: React.MutableRefObject<{
+    gallery: boolean;
+    artist: boolean;
+  }>;
   handleChangePage: React.Dispatch<React.SetStateAction<number>>;
   handleChangeTotal: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export const useGallery = ({ tab, page, loading, totalPage, handleChangePage, handleChangeTotal }: Props) => {
+export const useGallery = ({
+  tab,
+  page,
+  loading,
+  totalPage,
+  isFirstMount,
+  handleChangePage,
+  handleChangeTotal,
+}: Props) => {
   const dispatch = useAppDispatch();
 
   const [images, setImages] = useState<ImageList[]>([]);
@@ -21,31 +33,41 @@ export const useGallery = ({ tab, page, loading, totalPage, handleChangePage, ha
 
   const observerRef = useRef<HTMLDivElement | null>(null);
 
-  const getListGalleryFnc = (currPage: number) => {
-    dispatch(setState({ loading: true }));
-    getListGallery({ page: currPage })
-      .then((res) => {
-        setImages(res.datas);
-        handleChangeTotal(res.total_pages);
-        setTotalGallery(res.total_records ?? 0);
-      })
-      .finally(() => dispatch(setState({ loading: false })));
-  };
+  const getListGalleryFnc = useCallback(
+    (currPage: number) => {
+      dispatch(setState({ loading: true }));
+      getListGallery({ page: currPage })
+        .then((res) => {
+          setImages((prev) => {
+            return currPage === 1 ? res.datas : [...prev, ...res.datas];
+          });
+          handleChangeTotal(res.total_pages);
+          setTotalGallery(res.total_records ?? 0);
+        })
+        .finally(() => dispatch(setState({ loading: false })));
+    },
+    [dispatch, handleChangeTotal]
+  );
 
   useEffect(() => {
-    if (tab === "Gallery" && page <= totalPage) getListGalleryFnc(page);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, tab]);
+    if ((tab === "Gallery" && page <= totalPage) || isFirstMount.current.gallery) {
+      getListGalleryFnc(page);
+
+      if (isFirstMount.current.gallery) {
+        isFirstMount.current = { ...isFirstMount.current, gallery: false };
+      }
+    }
+  }, [getListGalleryFnc, isFirstMount, page, tab, totalPage]);
 
   const handleObserver: IntersectionObserverCallback = useCallback(
     (entries) => {
       const [target] = entries;
+
       if (target.isIntersecting && !loading && page < totalPage) {
         handleChangePage((prev) => prev + 1);
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [loading]
+    [handleChangePage, loading, page, totalPage]
   );
 
   useEffect(() => {

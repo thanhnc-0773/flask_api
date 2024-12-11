@@ -8,37 +8,42 @@ type Props = {
   tab: string;
   page: number;
   totalPage: number;
+  isFirstMount: React.MutableRefObject<{
+    gallery: boolean;
+    artist: boolean;
+  }>;
   handleChangePage: React.Dispatch<React.SetStateAction<number>>;
   handleChangeTotal: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export const useArtistList = ({ tab, page, totalPage, handleChangeTotal }: Props) => {
+export const useArtistList = ({ tab, page, totalPage, isFirstMount, handleChangeTotal }: Props) => {
   const dispatch = useAppDispatch();
 
   const [listArtist, setListArtist] = useState<DetailArtist[]>([]);
   const [totalArtist, setTotalArtist] = useState<number>(0);
 
-  const onSelectArtist = (id: string) => {
-    console.log("id", id);
-  };
-
   const getListArtistFnc = (currPage: number) => {
     dispatch(setState({ loading: true }));
     getListArtist({ page: currPage })
       .then((res) => {
-        setListArtist(res.datas);
-        handleChangeTotal(res.total_pages);
-        setTotalArtist(res.total_records ?? 0);
+        setListArtist((prev) => {
+          handleChangeTotal(res.total_pages);
+          setTotalArtist(res.total_records ?? 0);
+
+          return currPage === 1 ? res.datas : [...prev, ...res.datas];
+        });
       })
       .finally(() => dispatch(setState({ loading: false })));
   };
 
   useEffect(() => {
-    if (tab === "Artist" && page <= totalPage) {
+    if ((tab === "Artist" && page <= totalPage) || isFirstMount.current.artist) {
       getListArtistFnc(page);
+
+      if (isFirstMount.current.artist) isFirstMount.current = { ...isFirstMount.current, artist: false };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, tab]);
 
-  return { listArtist, totalArtist, onSelectArtist };
+  return { listArtist, totalArtist };
 };
