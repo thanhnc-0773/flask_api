@@ -75,6 +75,7 @@ def create_artist():
     link_x = request.form.get('link_x')
     style = request.form.get('style')
     x_tag = request.form.get('x_tag')
+    s3_url = None
 
     if not name or not style:
         return jsonify({'error': 'Artist name and style are required'}), 400
@@ -88,8 +89,6 @@ def create_artist():
         file = request.files['file']
         if file.filename != '':
             s3_url = upload_file_to_s3(file, location=Artist.__tablename__)
-        else:
-            s3_url = None
 
     data = {
         'name': name,
@@ -106,6 +105,7 @@ def create_artist():
         return jsonify({'error': str(e)}), 400
 
 
+@bp.route('', methods=['GET'], strict_slashes=False)
 @swag_from({
     'tags': ['Artists'],
     'parameters': [
@@ -210,7 +210,7 @@ def get_artists():
         field_name, direction = field.split(':')
         order_by.append((field_name, direction))
     
-    artists, total = Artist.paginate(filters, order_by, page=page, per_page=per_page)
+    artists, total = Artist.paginate(page, per_page, filters, order_by)
     total_pages = (total + per_page - 1) // per_page
 
     return jsonify({
@@ -301,7 +301,7 @@ def get_artist_images(artist_id):
     if not artist:
         return jsonify({'error': 'Artist not found'}), 404
 
-    galleries = artist.galleries  # Assuming Artist model has a relationship with Gallery
+    galleries = artist.galleries
     result = []
     for gallery in galleries:
         pictures = [picture.url for picture in gallery.pictures if picture.url]

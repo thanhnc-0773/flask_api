@@ -14,16 +14,12 @@ migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
-    print(os.getenv('DATABASE_URL'))
     app.config.from_object('app.config.Config')
 
     db.init_app(app)
     migrate.init_app(app, db)
     swagger = Swagger(app)
 
-    with app.app_context():
-        db.engine.connect()
-        print('Connected to the database')
     # Set up logging
     logging.basicConfig(level=logging.INFO)
     app.logger.setLevel(logging.INFO)

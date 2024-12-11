@@ -40,7 +40,7 @@ class ModelBase(db.Model):
         return self
 
     @classmethod
-    def paginate(self, page, per_page, filters=None, order_by=None):
+    def paginate(self, page, per_page, filters, order_by):
         query = self.query
         if filters:
             for attr, condition in filters.items():
@@ -70,7 +70,11 @@ class ModelBase(db.Model):
                     query = query.order_by(asc(field))
                 elif direction == 'desc':
                     query = query.order_by(desc(field))
-        return query.paginate(page, per_page, False).items
+        records = query.paginate(page=page, per_page=per_page).items
+
+        total = query.count()
+
+        return records, total
 
     def delete(self):
         with self.transaction():
@@ -117,6 +121,10 @@ class Artist(ModelBase):
             raise ValueError("Artist name is required")
         if 'style' not in data or not data['style']:
             raise ValueError("Style is required")
+        
+    def galleries(self):
+        return Gallery.query.filter_by(artist_id=self.id).all()
+
 
         
 class Team(ModelBase):

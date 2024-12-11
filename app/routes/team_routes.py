@@ -184,7 +184,7 @@ def get_teams():
     page = int(request.args.get('page', 1))
     per_page = int(request.args.get('per_page', 10))
     
-    teams, total_pages = Team.paginate(filters, order_by, page, per_page)
+    teams, total_pages = Team.paginate(page, per_page, filters, order_by)
     
     return jsonify({
         'current_page': page,

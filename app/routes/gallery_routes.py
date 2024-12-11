@@ -174,7 +174,7 @@ def get_galleries():
     page = int(request.args.get('page', 1))
     per_page = int(request.args.get('per_page', 10))
     
-    galleries, total = Gallery.paginate(filters, order_by, page, per_page)
+    galleries, total = Gallery.paginate(page, per_page, filters, order_by)
     total_pages = (total + per_page - 1) // per_page
     
     return jsonify({
