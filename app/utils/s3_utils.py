@@ -18,7 +18,7 @@ def upload_file_to_s3(file, location):
     file_path = os.path.join('/tmp', filename)
     file.save(file_path)
     try:
-        s3.upload_file(file_path, S3_BUCKET_NAME, filename)
+        s3.upload_file(file_path, S3_BUCKET_NAME, f"{location}/{filename}")
         print(f"File {file_path} uploaded to {S3_BUCKET_NAME}/{filename}")
     except Exception as e:
         print(f"Failed to upload {file_path} to S3: {e}")
