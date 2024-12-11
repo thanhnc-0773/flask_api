@@ -65,16 +65,16 @@ def create_team():
     name = request.form.get('name')
     description = request.form.get('description')
     position = request.form.get('position')
-    avatar = None
 
-    if 'file' in request.files:
-        file = request.files['file']
-        if file.filename != '':
-            avatar = upload_file_to_s3(file, Team.__tablename__)
-
-    team = Team(name=name, description=description, position=position, avatar=avatar)
+    team = Team(name=name, description=description, position=position)
     try:
-        team.save()
+        new_team = team.save()
+        if 'avatar' in request.files:
+            file = request.files['avatar']
+            if file.filename != '':
+                avatar = upload_file_to_s3(file, f"{Team.__tablename__}/{new_team.id}")
+                new_team.avatar = avatar
+                new_team.save()
         return jsonify(team.to_dict()), 201
     except ValueError as e:
         return jsonify({'error': str(e)}), 400
@@ -184,11 +184,12 @@ def get_teams():
     page = int(request.args.get('page', 1))
     per_page = int(request.args.get('per_page', 10))
     
-    teams, total_pages = Team.paginate(page, per_page, filters, order_by)
+    teams, total_pages, total_records = Team.paginate(page, per_page, filters, order_by)
     
     return jsonify({
         'current_page': page,
         'total_pages': total_pages,
+        'total_records': total_records,
         'datas': [team.to_dict() for team in teams]
     }), 200
 
@@ -289,10 +290,10 @@ def update_team(team_id):
         team.description = description
     if position:
             team.position = position
-    if 'file' in request.files:
-        file = request.files['file']
+    if 'avatar' in request.files:
+        file = request.files['avatar']
         if file.filename != '':
-            s3_url = upload_file_to_s3(file, Team.__tablename__)
+            s3_url = upload_file_to_s3(file, f"{Team.__tablename__}/{team.id}")
             team.avatar = s3_url
 
     try:

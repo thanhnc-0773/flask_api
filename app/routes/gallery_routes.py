@@ -64,10 +64,10 @@ def create_gallery():
 
     try:
         new_gallery = Gallery.create(data)
-        if 'file' in request.files:
-            file = request.files['file']
+        if 'avatar' in request.files:
+            file = request.files['avatar']
             if file.filename != '':
-                s3_url = upload_file_to_s3(file, Gallery.__tablename__)
+                s3_url = upload_file_to_s3(file, f"{Gallery.__tablename__}/{new_gallery.id}")
                 new_gallery.picture = s3_url
                 new_gallery.save()
         return jsonify(new_gallery.to_dict()), 201
@@ -174,12 +174,13 @@ def get_galleries():
     page = int(request.args.get('page', 1))
     per_page = int(request.args.get('per_page', 10))
     
-    galleries, total = Gallery.paginate(page, per_page, filters, order_by)
+    galleries, total, total_records = Gallery.paginate(page, per_page, filters, order_by)
     total_pages = (total + per_page - 1) // per_page
     
     return jsonify({
         'current_page': page,
         'total_pages': total_pages,
+        'total_records': total_records,
         'datas': [gallery.to_dict() for gallery in galleries]
     }), 200
 
@@ -279,10 +280,10 @@ def update_gallery(gallery_id):
     show_on_top = request.form.get('show_on_top', 'false').lower() == 'true'
     gallery.show_on_top = show_on_top
 
-    if 'file' in request.files:
-        file = request.files['file']
+    if 'avatar' in request.files:
+        file = request.files['avatar']
         if file.filename != '':
-            s3_url = upload_file_to_s3(file, Gallery.__tablename__)
+            s3_url = upload_file_to_s3(file, f"{Gallery.__tablename__}/{gallery.id}")
             gallery.picture = s3_url
 
     gallery.save()
@@ -320,15 +321,16 @@ def get_gallery_images(gallery_id):
     if not gallery:
         return jsonify({'error': 'Gallery item not found'}), 404
 
-    artist = gallery.artist
+    artist = gallery.artist()
     if not artist:
         return jsonify({'error': 'Artist not found'}), 404
 
     artist_galleries = artist.galleries()
 
-    return jsonify([
-        {'picture': get_presign_url_from_s3(g.picture, location="Galerries")} for g in artist_galleries if g.picture]
-    ), 200
+    return jsonify({
+        'artist': artist.to_dict(),
+        'pictures': [{'picture': get_presign_url_from_s3(g.picture, location="Galerries")} for g in artist_galleries if g.picture]
+    }), 200
 
 
 
