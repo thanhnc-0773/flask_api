@@ -191,3 +191,18 @@
         height: calc(100% - 250px);
     }
 }
+
+@media (max-width: 768px) {
+    .about-detail-top {
+        flex-direction: column;
+        height: unset;
+    }
+
+    .about-detail-bottom {
+        flex-direction: column;
+    }
+
+    .about-detail-bottom-left {
+        max-height: unset;
+    }
+}

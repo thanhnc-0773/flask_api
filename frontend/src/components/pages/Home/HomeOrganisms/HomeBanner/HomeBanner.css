@@ -108,4 +108,8 @@
     .vertical-text-container {
         display: none;
     }
+
+    .banner-container {
+        padding-top: 100px;
+    }
 }

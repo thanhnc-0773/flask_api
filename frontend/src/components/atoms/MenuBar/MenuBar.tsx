@@ -3,8 +3,11 @@ import "./Menubar.css";
 import { MENU_ARRAY, SOCIAL_HEADER } from "./Menubar.type";
 import { useNavigate } from "react-router-dom";
 import logoWhite from "src/assets/images/HTC_logo_White_1.png";
+import MenuMobile from "./MenuMobile";
 
 const Menubar: React.FC = () => {
+  const [isShowMenu, setIsShowMenu] = useState(false);
+
   const [scrollProgress, setScrollProgress] = useState(0);
   const navigate = useNavigate();
 
@@ -15,14 +18,17 @@ const Menubar: React.FC = () => {
     setScrollProgress(progress);
   };
 
+  const handleToggleMenu = () => setIsShowMenu((prev) => !prev);
+
+  const handleNavigate = (url: string) => {
+    navigate(url);
+    isShowMenu && handleToggleMenu();
+  };
+
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const handleNavigate = (url: string) => {
-    navigate(url);
-  };
 
   return (
     <div className="menubar">
@@ -56,7 +62,9 @@ const Menubar: React.FC = () => {
         })}
       </div>
 
-      <div className="icon-menu">
+      <MenuMobile isShow={isShowMenu} handleNavigate={handleNavigate} handleToggleMenu={handleToggleMenu} />
+
+      <div className="icon-menu" onClick={() => handleToggleMenu()}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"

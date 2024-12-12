@@ -74,6 +74,61 @@
     color: var(--white-color);
 }
 
+.menu-mobile-container {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--red-color);
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    transform: translateX(100%);
+    opacity: 0;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.menu-mobile-container.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.nav-mobile {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 60px 0;
+}
+
+.nav-list-mobile {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 25px;
+    flex-direction: column;
+}
+
+.nav-item-mobile {
+    font-family: SpaceGrotesk-Bold, "sans-serif";
+    margin: 0 20px;
+    cursor: pointer;
+    font-size: 27px;
+    color: white;
+    transition: color 0.3s;
+    font-weight: 600;
+    line-height: 34px;
+}
+
+.icon-menu-close {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .nav {

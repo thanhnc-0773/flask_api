@@ -131,6 +131,7 @@
         width: 100%;
         max-width: 100%;
         justify-content: center;
+        flex-direction: column;
     }
 
     .logo-footer-container {
