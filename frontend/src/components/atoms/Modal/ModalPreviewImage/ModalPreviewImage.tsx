@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Carousel } from "react-bootstrap";
 import { ImageList } from "src/components/pages/Gallery/Gallery.type";
 import "./ModalPreviewImage.css";
@@ -8,7 +8,14 @@ type Props = { images: ImageList[]; initialIndex: number };
 
 const ModalPreviewImage: React.FC<Props> = ({ images, initialIndex = 0 }) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
+  const [listLoaded, setListLoaded] = useState<number[]>([]);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    if (videoRef.current && listLoaded.includes(currentIndex)) {
+      videoRef.current.play();
+    }
+  }, [currentIndex, listLoaded]);
 
   const handleSelect = (selectedIndex: number) => {
     if (isVideo(images[currentIndex].picture) && videoRef.current) {
@@ -61,7 +68,11 @@ const ModalPreviewImage: React.FC<Props> = ({ images, initialIndex = 0 }) => {
                 src={image.picture}
                 className="video-preview"
                 controls
-                autoPlay
+                onLoadedData={() =>
+                  setListLoaded((prev) => {
+                    return prev.includes(index) ? prev : [...prev, index];
+                  })
+                }
               />
             ) : (
               <img className="d-block w-100 image-preview" src={image.picture} alt={`img ${image.id}`} />
