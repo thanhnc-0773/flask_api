@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Menubar.css";
-import { MENU_ARRAY } from "./Menubar.type";
+import { MENU_ARRAY, SOCIAL_HEADER } from "./Menubar.type";
 import { useNavigate } from "react-router-dom";
 import logoWhite from "src/assets/images/HTC_logo_White_1.png";
 
@@ -45,6 +45,16 @@ const Menubar: React.FC = () => {
           width: `${scrollProgress}%`,
         }}
       ></div>
+
+      <div className="social-icon">
+        {SOCIAL_HEADER.map((item, index) => {
+          return (
+            <a key={`${index}_${item.url}`} href={item.url} target="_blank" rel="noopener noreferrer">
+              {item.icon}
+            </a>
+          );
+        })}
+      </div>
 
       <div className="icon-menu">
         <svg

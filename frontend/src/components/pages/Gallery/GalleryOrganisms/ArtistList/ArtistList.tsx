@@ -6,11 +6,13 @@ const ArtistList: React.FC = () => {
   const { listArtist, onSelectArtist } = useContext(GalleryContext);
 
   return (
-    <ArtistContainer>
-      {listArtist.map((team) => (
-        <Artist key={team.id} detailArtist={team} type="artist" onSelectArtist={onSelectArtist} />
-      ))}
-    </ArtistContainer>
+    <div className="artist-gallery-container">
+      <ArtistContainer>
+        {listArtist.map((team) => (
+          <Artist key={team.id} detailArtist={team} type="artist" onSelectArtist={onSelectArtist} />
+        ))}
+      </ArtistContainer>
+    </div>
   );
 };
 

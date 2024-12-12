@@ -39,7 +39,7 @@
 
 .vertical-text-container {
     position: absolute;
-    bottom: 30px;
+    bottom: 70px;
     right: 20px;
     text-align: left;
     writing-mode: vertical-rl;
@@ -54,6 +54,9 @@
 }
 
 .vertical-title {
+    font-family: "Space Grotesk", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
     font-weight: bold;
     letter-spacing: 0.1em;
     margin: 0;
@@ -63,6 +66,7 @@
 }
 
 .vertical-description {
+    font-family: "Space Grotesk", serif;
     font-size: 16px;
     font-weight: 300;
     margin: 10px 0 0;
@@ -70,6 +74,7 @@
     font-weight: bold;
     color: var(--white-color);
     opacity: .5;
+    text-transform: uppercase;
 }
 
 .fade-overlay {
@@ -94,5 +99,13 @@
     .content-description,
     .vertical-description {
         font-size: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .banner-modal,
+    .vertical-text-container {
+        display: none;
     }
 }

@@ -15,6 +15,12 @@
     object-fit: contain;
 }
 
+.video-preview {
+    width: auto !important;
+    height: 100%;
+    max-width: 100%;
+}
+
 .modal-preview-container .carousel-item-next,
 .modal-preview-container .carousel-item-prev,
 .modal-preview-container .carousel-item.active {
@@ -22,6 +28,10 @@
     display: flex !important;
     justify-content: center;
     align-items: center;
+}
+
+.carousel-controls.first-item {
+    justify-content: flex-end;
 }
 
 .carousel-controls {

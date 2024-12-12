@@ -15,6 +15,11 @@ export const TAB_BANNER_TEXT = {
   Artist: "Artist",
 };
 
+export const TAB_BANNER_SUB_TEXT = {
+  Gallery: "Collect the works of the artist.",
+  Artist: "Gather the best artists in web3",
+};
+
 export type ModalPreviewState = {
   isShow: boolean;
   imageList: ImageList[];

@@ -2,9 +2,10 @@
 
 body {
   margin: 0;
-  font-family: 'Scto Grotesk', sans-serif;
+  font-family: "Space Grotesk", serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 body.modal-open,
@@ -31,13 +32,13 @@ code {
   --tw-shadow: 0 0 15px hsla(0, 0%, 100%, .42);
 }
 
-::-webkit-scrollbar {
-  width: 0;
-  height: 0;
+body::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
 }
 
-::-webkit-scrollbar-button {
-  background: transparent
+body::-webkit-scrollbar-button {
+  background: transparent !important;
 }
 
 .global-loading-container {

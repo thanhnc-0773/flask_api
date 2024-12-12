@@ -39,10 +39,8 @@ const HomeSubBanner: React.FC = () => {
           <div className="vision-content">
             {tagIcon}
 
-            <span className="vision-content-text">THE VISION</span>
+            <span className="vision-content-text">HTC GROUP</span>
           </div>
-
-          <div className="sub-banner-team-name">HTC GROUP</div>
 
           <p className="sub-banner-team-description">{textContent}</p>
         </div>

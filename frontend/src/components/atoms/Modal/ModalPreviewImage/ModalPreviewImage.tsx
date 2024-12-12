@@ -1,14 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Carousel } from "react-bootstrap";
 import { ImageList } from "src/components/pages/Gallery/Gallery.type";
 import "./ModalPreviewImage.css";
+import { isVideo } from "src/utilities/commons/utils";
 
 type Props = { images: ImageList[]; initialIndex: number };
 
 const ModalPreviewImage: React.FC<Props> = ({ images, initialIndex = 0 }) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const handleSelect = (selectedIndex: number) => {
+    if (isVideo(images[currentIndex].picture) && videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
     setCurrentIndex(selectedIndex);
   };
 
@@ -47,12 +53,24 @@ const ModalPreviewImage: React.FC<Props> = ({ images, initialIndex = 0 }) => {
       >
         {images.map((image, index) => (
           <Carousel.Item key={index}>
-            <img className="d-block w-100 image-preview" src={image.picture} alt={`img ${image.picture}}`} />
+            {isVideo(image.picture) ? (
+              <video
+                ref={(el) => {
+                  if (index === currentIndex) videoRef.current = el;
+                }}
+                src={image.picture}
+                className="video-preview"
+                controls
+                autoPlay
+              />
+            ) : (
+              <img className="d-block w-100 image-preview" src={image.picture} alt={`img ${image.id}`} />
+            )}
           </Carousel.Item>
         ))}
       </Carousel>
 
-      <div className="carousel-controls">
+      <div className={`carousel-controls  ${!canGoPrev ? "first-item" : ""}`}>
         {canGoPrev && (
           <button className="carousel-btn prev-btn" onClick={() => handleSelect(currentIndex - 1)}>
             ❮
