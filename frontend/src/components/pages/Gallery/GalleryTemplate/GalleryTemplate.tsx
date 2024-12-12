@@ -13,9 +13,13 @@ const GalleryTemplate: React.FC = () => {
     const onClickArtist = () => window.open(modalPreview.detailArtist.link_x, "_blank", "noopener,noreferrer");
 
     return (
-      <div className="artist-preview-container" onClick={() => onClickArtist()}>
+      <div className="artist-preview-container">
         <img src={modalPreview.detailArtist.avatar} alt={modalPreview.detailArtist.name} />
         <div className="artist-preview-name">{modalPreview.detailArtist.name}</div>
+        <div className="artist-dot">·</div>
+        <div className="artist-view-tweet" onClick={() => onClickArtist()}>
+          view tweet
+        </div>
       </div>
     );
   };

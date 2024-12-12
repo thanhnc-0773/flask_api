@@ -3,11 +3,11 @@
     width: 100vw;
     background-color: var(--background-color);
     color: white;
-    padding: 0 166px
+    padding-left: 120px;
 }
 
 @media (max-width: 768px) {
     .main-layout {
-        padding: 0 22px;
+        padding: 0 5px;
     }
 }

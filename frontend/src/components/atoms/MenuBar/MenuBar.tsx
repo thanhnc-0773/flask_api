@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./Menubar.css";
-import { MENU_ARRAY } from "./Menubar.type";
+import { MENU_ARRAY, SOCIAL_HEADER } from "./Menubar.type";
 import { useNavigate } from "react-router-dom";
 import logoWhite from "src/assets/images/HTC_logo_White_1.png";
+import MenuMobile from "./MenuMobile";
 
 const Menubar: React.FC = () => {
+  const [isShowMenu, setIsShowMenu] = useState(false);
+
   const [scrollProgress, setScrollProgress] = useState(0);
   const navigate = useNavigate();
 
@@ -15,14 +18,17 @@ const Menubar: React.FC = () => {
     setScrollProgress(progress);
   };
 
+  const handleToggleMenu = () => setIsShowMenu((prev) => !prev);
+
+  const handleNavigate = (url: string) => {
+    navigate(url);
+    isShowMenu && handleToggleMenu();
+  };
+
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const handleNavigate = (url: string) => {
-    navigate(url);
-  };
 
   return (
     <div className="menubar">
@@ -46,7 +52,19 @@ const Menubar: React.FC = () => {
         }}
       ></div>
 
-      <div className="icon-menu">
+      <div className="social-icon">
+        {SOCIAL_HEADER.map((item, index) => {
+          return (
+            <a key={`${index}_${item.url}`} href={item.url} target="_blank" rel="noopener noreferrer">
+              {item.icon}
+            </a>
+          );
+        })}
+      </div>
+
+      <MenuMobile isShow={isShowMenu} handleNavigate={handleNavigate} handleToggleMenu={handleToggleMenu} />
+
+      <div className="icon-menu" onClick={() => handleToggleMenu()}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"

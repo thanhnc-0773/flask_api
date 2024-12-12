@@ -8,6 +8,7 @@ import { useGallery } from "./hooks/useGallery";
 import { useGalleryAction } from "./hooks/useGalleryAction";
 
 const GalleryPage: React.FC = () => {
+  const observerRef = useRef<HTMLDivElement | null>(null);
   const { loading } = useAppSelector((state) => state.app);
 
   const isFirstMount = useRef<{ gallery: boolean; artist: boolean }>({ gallery: true, artist: true });
@@ -34,11 +35,12 @@ const GalleryPage: React.FC = () => {
     handleChangePage,
     handleChangeTotal,
   });
-  const { images, totalGallery, observerRef } = useGallery({
+  const { images, totalGallery } = useGallery({
     tab,
     page,
     loading,
     totalPage,
+    observerRef,
     isFirstMount,
     handleChangePage,
     handleChangeTotal,

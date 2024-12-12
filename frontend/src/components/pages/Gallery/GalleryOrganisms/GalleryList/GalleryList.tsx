@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { isVideo } from "src/utilities/commons/utils";
 import { GalleryContext } from "../../context";
 import "./GalleryList.css";
 
@@ -10,7 +11,11 @@ const GalleryList: React.FC = () => {
       <div className="gallery-flex">
         {images.map((image) => (
           <div key={image.id} className="gallery-item" onClick={() => onSelectGallery(image.id.toString())}>
-            <img src={image.picture} alt={image.alt} />
+            {isVideo(image.picture) ? (
+              <video src={image.picture} className="video-thumbnail" muted />
+            ) : (
+              <img src={image.picture} alt={`img ${image.id}`} />
+            )}
           </div>
         ))}
       </div>

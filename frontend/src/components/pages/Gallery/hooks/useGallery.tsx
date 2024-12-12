@@ -9,6 +9,7 @@ type Props = {
   page: number;
   loading: boolean;
   totalPage: number;
+  observerRef: React.MutableRefObject<HTMLDivElement | null>;
   isFirstMount: React.MutableRefObject<{
     gallery: boolean;
     artist: boolean;
@@ -22,6 +23,7 @@ export const useGallery = ({
   page,
   loading,
   totalPage,
+  observerRef,
   isFirstMount,
   handleChangePage,
   handleChangeTotal,
@@ -31,8 +33,6 @@ export const useGallery = ({
   const [images, setImages] = useState<ImageList[]>([]);
   const [totalGallery, setTotalGallery] = useState<number>(0);
 
-  const observerRef = useRef<HTMLDivElement | null>(null);
-
   const getListGalleryFnc = useCallback(
     (currPage: number) => {
       dispatch(setState({ loading: true }));
@@ -41,12 +41,12 @@ export const useGallery = ({
           setImages((prev) => {
             return currPage === 1 ? res.datas : [...prev, ...res.datas];
           });
-          handleChangeTotal(res.total_pages);
+          tab === "Gallery" && handleChangeTotal(res.total_pages);
           setTotalGallery(res.total_records ?? 0);
         })
         .finally(() => dispatch(setState({ loading: false })));
     },
-    [dispatch, handleChangeTotal]
+    [dispatch, handleChangeTotal, tab]
   );
 
   useEffect(() => {
@@ -59,19 +59,19 @@ export const useGallery = ({
     }
   }, [getListGalleryFnc, isFirstMount, page, tab, totalPage]);
 
-  const handleObserver: IntersectionObserverCallback = useCallback(
-    (entries) => {
+  const handleObserver = useCallback(
+    (entries: IntersectionObserverEntry[], page: number, totalPage: number) => {
       const [target] = entries;
 
       if (target.isIntersecting && !loading && page < totalPage) {
         handleChangePage((prev) => prev + 1);
       }
     },
-    [handleChangePage, loading, page, totalPage]
+    [handleChangePage, loading]
   );
 
   useEffect(() => {
-    const observer = new IntersectionObserver(handleObserver, {
+    const observer = new IntersectionObserver((entries) => handleObserver(entries, page, totalPage), {
       root: null,
       rootMargin: "200px",
       threshold: 0.1,
@@ -83,7 +83,7 @@ export const useGallery = ({
       // eslint-disable-next-line react-hooks/exhaustive-deps
       if (observerRef.current) observer.unobserve(observerRef.current);
     };
-  }, [handleObserver]);
+  }, [handleObserver, observerRef, page, totalPage]);
 
-  return { page, images, observerRef, totalGallery };
+  return { page, images, totalGallery };
 };

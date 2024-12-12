@@ -14,7 +14,7 @@ const GalleryAction: React.FC = () => {
           eventKey="Gallery"
           title={
             <>
-              Gallery <span style={{ fontSize: "15px" }}>({totalGallery})</span>
+              Fan Art <span style={{ fontSize: "15px" }}>({totalGallery})</span>
             </>
           }
         >

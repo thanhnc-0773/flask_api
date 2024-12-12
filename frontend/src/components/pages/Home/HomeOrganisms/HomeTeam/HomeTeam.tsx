@@ -1,13 +1,7 @@
 import React from "react";
-import Artist, { ArtistContainer } from "src/components/atoms/Artist/Artist";
 import "./HomeTeam.css";
-import { mockListTeam } from "./HomeTeam.type";
 
 const HomeTeam: React.FC = () => {
-  const onSelect = (id: string) => {
-    console.log("id", id);
-  };
-
   return (
     <div className="home-team-container  animate-me">
       <div className="home-team">
@@ -23,11 +17,11 @@ const HomeTeam: React.FC = () => {
           <div className="team-sub-title">(Coming soon)</div>
         </div>
 
-        <ArtistContainer>
+        {/* <ArtistContainer>
           {mockListTeam.map((team) => (
             <Artist key={team.id} detailMember={team} type="team" onSelectArtist={onSelect} />
           ))}
-        </ArtistContainer>
+        </ArtistContainer> */}
       </div>
     </div>
   );

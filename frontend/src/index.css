@@ -1,10 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Space+Grotesk:wght@300..700&display=swap');
 
+html {
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   margin: 0;
-  font-family: 'Scto Grotesk', sans-serif;
+  font-family: "Space Grotesk", serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 body.modal-open,
@@ -19,7 +26,7 @@ code {
 :root {
   --font-primary: 'FontName', sans-serif;
   --font-secondary: 'AnotherFont', serif;
-  --background-color: #28272a;
+  --background-color: #28272A;
   --black-color: #000000;
   --footer-color: #2A2A2A;
   --grey-color: #454545;
@@ -31,13 +38,13 @@ code {
   --tw-shadow: 0 0 15px hsla(0, 0%, 100%, .42);
 }
 
-::-webkit-scrollbar {
-  width: 0;
-  height: 0;
+body::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
 }
 
-::-webkit-scrollbar-button {
-  background: transparent
+body::-webkit-scrollbar-button {
+  background: transparent !important;
 }
 
 .global-loading-container {
