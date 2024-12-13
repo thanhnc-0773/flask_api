@@ -4,6 +4,8 @@ import RoutesApp from "./routes/index.routes";
 import ResetScroll from "./components/atoms/ResetScroll";
 
 function App() {
+  console.log(process.env.NODE_ENV === "production");
+
   if (process.env.NODE_ENV === "production") {
     const originalConsoleWarn = console.warn;
     console.warn = (...args) => {
