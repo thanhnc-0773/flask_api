@@ -12,16 +12,20 @@ const ModalPreviewImage: React.FC<Props> = ({ images, initialIndex = 0 }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
-    if (videoRef.current && listLoaded.includes(currentIndex)) {
-      videoRef.current.play();
-    }
+    requestAnimationFrame(() => {
+      if (videoRef.current && listLoaded.includes(currentIndex)) {
+        videoRef.current.play();
+      }
+    });
   }, [currentIndex, listLoaded]);
 
   const handleSelect = (selectedIndex: number) => {
-    if (isVideo(images[currentIndex].picture) && videoRef.current) {
-      videoRef.current.pause();
-      videoRef.current.currentTime = 0;
-    }
+    requestAnimationFrame(() => {
+      if (isVideo(images[currentIndex].picture) && videoRef.current) {
+        videoRef.current.pause();
+        videoRef.current.currentTime = 0;
+      }
+    });
     setCurrentIndex(selectedIndex);
   };
 

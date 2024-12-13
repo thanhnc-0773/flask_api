@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getListGallery } from "src/apis/galleries/getGallery";
 import { useAppDispatch } from "src/app/appHooks";
 import { setState } from "src/slices/appSlice";
@@ -71,11 +71,18 @@ export const useGallery = ({
   );
 
   useEffect(() => {
-    const observer = new IntersectionObserver((entries) => handleObserver(entries, page, totalPage), {
-      root: null,
-      rootMargin: "200px",
-      threshold: 0.1,
-    });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        requestAnimationFrame(() => {
+          handleObserver(entries, page, totalPage);
+        });
+      },
+      {
+        root: null,
+        rootMargin: "200px",
+        threshold: 0.1,
+      }
+    );
 
     if (observerRef.current) observer.observe(observerRef.current);
 
