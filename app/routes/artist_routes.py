@@ -237,9 +237,6 @@ def get_artists():
     ]
     total_pages = (total_records + per_page - 1) // per_page
 
-    import pdb
-    pdb.set_trace()
-
     return jsonify({
         'current_page': page,
         'total_pages': total_pages,
