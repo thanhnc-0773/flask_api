@@ -55,10 +55,12 @@
     background: #ffff;
     transition: width 0.2s ease-out;
     border-radius: 0;
+    z-index: 9990;
 }
 
 .icon-menu {
     display: none;
+    z-index: 9991;
 }
 
 .menubar .logo-white {

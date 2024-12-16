@@ -6,43 +6,49 @@ const AboutDetail: React.FC = () => {
     <div className="about-detail-container">
       <div className="about-detail-top">
         <div className="about-detail-top-description">
-          <div className="des-top">WHAT IS L3E7 WORLDS?</div>
+          <div className="des-top">WHAT IS HTCSTUDIO.COM?</div>
           <div className="des-bottom">
-            The L3E7 Worlds NFT collection, limited to only 600 NFTs, acts as an early access pass. It grants holders a
-            range of exclusive benefits, symbolizing their premier stake within the ecosystem.
+            HTC studio is a collective of talented artists specializing in creating and supporting visual art for web3
+            projects. With a team experienced in creating high-quality 2d and 3d art, the studio focuses on providing
+            customized creative solutions to meet the unique needs of blockchain-based initiatives.
           </div>
         </div>
 
-        <div className="about-detail-top-action">
+        {/* <div className="about-detail-top-action">
           <a href="/gallery" className="detail-top-button">
             Browse Collection
           </a>
-        </div>
+        </div> */}
       </div>
 
       <div className="about-detail-bottom">
         <div className="about-detail-bottom-left">
           <div className="bottom-left-text">
             <div className="des-top" style={{ lineHeight: "unset" }}>
-              DESIGN CONCEPT
+              WHO'S BEHIND HTCSTUDIO.COM?
             </div>
-            <div className="des-bottom" style={{ margin: 0 }}>
+            {/* <div className="des-bottom" style={{ margin: 0 }}>
               Every NFT within this collection is procedurally crafted using 18 distinct animated assets as its
               foundation
-            </div>
+            </div> */}
           </div>
 
           <div className="bottom-left-text">
-            <div className="des-top">UTILITY</div>
-            <div className="des-bottom" style={{ margin: 0 }}>
+            <div className="des-top">MISSION</div>
+            {/* <div className="des-bottom" style={{ margin: 0 }}>
               Benefits
-            </div>
+            </div> */}
 
             <ul className="des-bottom-list">
               <li>
-                <span>Reserved spot in the private presale of L3E7 upcoming collections</span>
+                <span>
+                  The studio's mission is to enhance the visual identity of Web3 projects through exceptional art,
+                  connecting the community and increasing the value of digital assets. HTC Studio creates impressive
+                  designs and collaborates with clients to ensure the project aligns with their goals and target
+                  audience.
+                </span>
               </li>
-              <li>
+              {/* <li>
                 <span>Gain Sharing from the Ecosystem</span>
               </li>
               <li>
@@ -53,7 +59,7 @@ const AboutDetail: React.FC = () => {
               </li>
               <li>
                 <span>IRL Events</span>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>

@@ -17,14 +17,14 @@ const Footer: React.FC = () => {
           </div>
 
           <div className="detail-content">
-            L3E7 MAKES ALL THESE EXHILARATING EXPERIENCES POSSIBLE THROUGH CUTTING-EDGE LOCATION-BASED SERVICES AND
-            RENDERING ENGINE.
+            HTC ALWAYS STRIVES TO CREATE THE BEST ARTISTIC PRODUCTS, CONTRIBUTING TO THE GROWTH OF WEB3 ART, CREATING
+            JOBS AND PASSION FOR ARTISTS. WE ALWAYS LISTEN TO THE COMMUNITY'S FEEDBACK AND GROW TOGETHER.
           </div>
         </div>
 
         <div className="contact-container">
           <div className="quote-team-container">
-            <div className="quote-content">YOUR ADVENTURE AWAITS</div>
+            <div className="quote-content">COLLABORATION - DEVELOPMENT</div>
             <div className="copyright-content">© 2024 HTC, All Rights Reserved</div>
           </div>
 

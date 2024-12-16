@@ -1,12 +1,14 @@
 from flask import Blueprint, request, jsonify
-from app.models import Artist
+from app.models import Artist, Gallery
 from app.utils.s3_utils import upload_file_to_s3, get_presign_url_from_s3
 from flasgger import swag_from
 from datetime import datetime
 from urllib.parse import urlparse
-
+from sqlalchemy.sql import func
+from app import db
 
 bp = Blueprint('artist_routes', __name__)
+
 
 @bp.route('', methods=['POST'], strict_slashes=False)
 @swag_from({
@@ -97,7 +99,8 @@ def create_artist():
         if 'avatar' in request.files:
             file = request.files['avatar']
             if file.filename != '':
-                s3_url = upload_file_to_s3(file, location=f"{Artist.__tablename__}/{new_artist.id}")
+                s3_url = upload_file_to_s3(
+                    file, location=f"{Artist.__tablename__}/{new_artist.id}")
                 new_artist.avatar = s3_url
                 new_artist.save()
         return jsonify(new_artist.to_dict()), 201
@@ -196,30 +199,53 @@ def get_artists():
     if style:
         filters['style'] = style
     if name:
-        filters['name'] = {'like': f'%{name}%' }
+        filters['name'] = {'like': f'%{name}%'}
     if created_at:
         try:
             created_at = datetime.strptime(created_at, '%Y-%m-%dT%H:%M:%S')
             filters['created_at'] = {'gte': created_at}
         except ValueError:
             return jsonify({'error': 'Invalid created_at format. Use ISO 8601 format.'}), 400
-    
-    order_by = []
-    order_fields = request.args.getlist('order_by')
-    for field in order_fields:
-        field_name, direction = field.split(':')
-        order_by.append((field_name, direction))
-    
-    artists, total, total_records = Artist.paginate(page, per_page, filters, order_by)
-    total_pages = (total + per_page - 1) // per_page
+
+    subquery = db.session.query(
+        Gallery.artist_id,
+        func.count(Gallery.id).label('total_image')
+    ).group_by(Gallery.artist_id).subquery()
+
+    query = db.session.query(
+        Artist,
+        func.coalesce(subquery.c.total_image, 0).label('total_image')
+    ).outerjoin(subquery, Artist.id == subquery.c.artist_id)
+
+    if 'style' in filters:
+        query = query.filter(Artist.style == filters['style'])
+    if 'name' in filters:
+        query = query.filter(Artist.name.like(filters['name']['like']))
+    if 'created_at' in filters:
+        query = query.filter(Artist.created_at >= filters['created_at']['gte'])
+
+    total_records = query.count()
+    paginated = query.order_by(Artist.created_at.desc()).offset(
+        (page - 1) * per_page).limit(per_page).all()
+
+    datas = [
+        {
+            **artist.to_dict(),
+            'total_image': total_image
+        }
+        for artist, total_image in paginated
+    ]
+    total_pages = (total_records + per_page - 1) // per_page
+
+    import pdb
+    pdb.set_trace()
 
     return jsonify({
         'current_page': page,
         'total_pages': total_pages,
-        'datas': [artist.to_dict() for artist in artists],
+        'datas': datas,
         'total_records': total_records
     })
-
 
 
 @bp.route('/<int:artist_id>', methods=['GET'])
@@ -312,7 +338,7 @@ def get_artist_images(artist_id):
     return jsonify({
         'artist': artist.to_dict(),
         'pictures': result
-        }), 200
+    }), 200
 
 
 @bp.route('/<int:artist_id>', methods=['PUT'])
@@ -389,11 +415,11 @@ def update_artist(artist_id):
     if not artist:
         return jsonify({'error': 'Artist not found'}), 404
 
-    
     if 'avatar' in request.files:
         file = request.files['avatar']
         if file.filename != '':
-            s3_url = upload_file_to_s3(file, location=f"{Artist.__tablename__}/{artist_id}")
+            s3_url = upload_file_to_s3(
+                file, location=f"{Artist.__tablename__}/{artist_id}")
             artist.avatar = s3_url
 
     artist.save()
