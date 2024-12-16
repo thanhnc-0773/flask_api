@@ -5,6 +5,7 @@ export type DetailArtist = {
   style: string;
   avatar: string;
   x_tag: string;
+  total_image: number;
 };
 
 export type DetailMember = {
