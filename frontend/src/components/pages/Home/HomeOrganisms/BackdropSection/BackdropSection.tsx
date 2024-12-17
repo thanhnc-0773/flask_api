@@ -1,6 +1,6 @@
 import React from "react";
-import backLogo from "src/assets/images/HTC_logo_White_1.png";
-import banner from "src/assets/images/pet_banner_2.jpg";
+import backLogo from "src/assets/images/htc studio.png";
+import banner from "src/assets/images/Pet_sub_banner.png";
 import "./BackdropSection.css";
 
 const BackdropSection: React.FC = () => {

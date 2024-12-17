@@ -6,7 +6,7 @@ export type MenuItem = {
 };
 
 export const MENU_ARRAY: MenuItem[] = [
-  { title: "Home", url: routesName.ROOT },
+  { title: "Home Page", url: routesName.ROOT },
   { title: "Fan Art", url: routesName.GALLERY },
   { title: "Order", url: routesName.ROOT },
   { title: "About", url: routesName.ABOUT },

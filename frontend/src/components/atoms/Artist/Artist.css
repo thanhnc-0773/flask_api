@@ -7,7 +7,7 @@
 }
 
 .artist-gallery-container {
-    padding: 0 10px;
+    padding: 0 100px;
 }
 
 .artist-container {
@@ -81,6 +81,20 @@
 .artist-style {
     font-weight: 400;
     font-size: 15px;
+}
+
+.artist-title-container {
+    display: flex;
+    gap: 1rem;
+    padding: 40px 100px;
+    align-items: center;
+}
+
+.artist-title {
+    font-family: "Space Grotesk", serif;
+    font-weight: bold;
+    font-size: 40px;
+    text-transform: uppercase;
 }
 
 @media (max-width: 768px) {

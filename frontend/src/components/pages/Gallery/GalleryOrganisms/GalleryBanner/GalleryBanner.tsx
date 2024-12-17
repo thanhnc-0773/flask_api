@@ -1,16 +1,17 @@
 import React, { useContext } from "react";
-import homeBanner from "src/assets/images/Banner_1.jpg";
-import HomeBanner from "src/components/pages/Home/HomeOrganisms/HomeBanner";
+import galleryBanner from "src/assets/images/Banner_2_2.jpg";
+import artistBanner from "src/assets/images/Banner_1.jpg";
 import { GalleryContext } from "../../context";
 import { TAB_BANNER_SUB_TEXT, TAB_BANNER_TEXT } from "../../Gallery.type";
 import "./GalleryBanner.css";
+import HomeBanner from "src/components/pages/Home/HomeOrganisms/HomeBanner";
 
 const GalleryBanner: React.FC = () => {
   const { tab, scrollPosition } = useContext(GalleryContext);
 
   return (
     <HomeBanner
-      img={homeBanner}
+      img={tab === "Gallery" ? galleryBanner : artistBanner}
       scrollPosition={scrollPosition}
       isShowVerticalText={true}
       isShowHorizontalText={true}
