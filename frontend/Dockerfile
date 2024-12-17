@@ -1,4 +1,4 @@
-FROM node:20.11.0
+FROM node:22.11.0
 
 # Set working directory
 WORKDIR /app
@@ -7,11 +7,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 
 # Set npm registry and install dependencies
-RUN npm install -g npm@latest && \
-    npm config delete proxy && \
-    npm config delete https-proxy && \
-    npm config set registry https://registry.npmjs.org/ && \
-    npm install
+RUN npm install
 
 # Copy all frontend files
 COPY . .

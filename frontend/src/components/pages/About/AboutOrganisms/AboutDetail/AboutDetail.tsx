@@ -1,5 +1,5 @@
 import React from "react";
-import banner from "src/assets/images/img-1.webp";
+import banner from "src/assets/images/Pet_1_2.jpg";
 
 const AboutDetail: React.FC = () => {
   return (
