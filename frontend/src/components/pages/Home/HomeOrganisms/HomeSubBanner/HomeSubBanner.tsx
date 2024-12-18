@@ -1,7 +1,7 @@
 import React from "react";
 import logoContent from "src/assets/images/HTC_logo_White_1.png";
 import subBigBanner from "src/assets/images/Dragon_motor_11.jpg";
-import subBanner from "src/assets/images/img-1.webp";
+import subBanner from "src/assets/images/Poster_final_2.jpg";
 import "./HomeSubBanner.css";
 
 const HomeSubBanner: React.FC = () => {
