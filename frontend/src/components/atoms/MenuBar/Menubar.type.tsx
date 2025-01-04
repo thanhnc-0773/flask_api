@@ -27,7 +27,7 @@ export const SOCIAL_HEADER = [
       </svg>
     ),
 
-    url: "https://x.com/Htcstudio6262",
+    url: "https://x.com/StudioHTC",
   },
   {
     icon: (
