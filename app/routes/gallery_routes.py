@@ -1,11 +1,12 @@
 from flask import Blueprint, request, jsonify
-from app.models import Gallery
+from app.models import Gallery, Artist
 from app.utils.s3_utils import upload_file_to_s3, get_presign_url_from_s3
 from flasgger import swag_from
 from datetime import datetime
 
 
 bp = Blueprint('gallery_routes', __name__)
+
 
 @bp.route('', methods=['POST'], strict_slashes=False)
 @swag_from({
@@ -25,23 +26,32 @@ bp = Blueprint('gallery_routes', __name__)
             'description': 'Whether to show the gallery item on top'
         },
         {
-            'name': 'picture',
+            'name': 'pictures',
             'in': 'formData',
-            'type': 'file',
-            'description': 'File to upload'
+            'type': 'array',
+            'items': {'type': 'file'},
+            'description': 'List of files to upload'
         }
     ],
     'responses': {
         201: {
-            'description': 'Gallery item created successfully',
+            'description': 'Gallery items created successfully',
             'schema': {
                 'type': 'object',
                 'properties': {
-                    'artist_id': {'type': 'integer'},
-                    'picture': {'type': 'string'},
-                    'show_on_top': {'type': 'boolean'},
-                    'created_at': {'type': 'string', 'format': 'date-time'},
-                    'updated_at': {'type': 'string', 'format': 'date-time'}
+                    'galleries': {
+                        'type': 'array',
+                        'items': {
+                            'type': 'object',
+                            'properties': {
+                                'artist_id': {'type': 'integer'},
+                                'picture': {'type': 'string'},
+                                'show_on_top': {'type': 'boolean'},
+                                'created_at': {'type': 'string', 'format': 'date-time'},
+                                'updated_at': {'type': 'string', 'format': 'date-time'}
+                            }
+                        }
+                    }
                 }
             }
         },
@@ -50,30 +60,38 @@ bp = Blueprint('gallery_routes', __name__)
         }
     }
 })
-def create_gallery():
+def create_galleries():
     artist_id = request.form.get('artist_id')
     show_on_top = request.form.get('show_on_top', 'false').lower() == 'true'
 
-    if not artist_id:
-        return jsonify({'error': 'Artist ID is required'}), 400
+    artist = Artist.get(artist_id)
+    if not artist:
+        return jsonify({'error': 'Artist not found'}), 400
 
-    data = {
-        'artist_id': artist_id,
-        'show_on_top': show_on_top
-    }
+    if 'pictures' not in request.files:
+        return jsonify({'error': 'At least one picture is required'}), 400
+
+    pictures = request.files.getlist('pictures')
+    if not pictures:
+        return jsonify({'error': 'At least one picture is required'}), 400
+
+    created_galleries = []
 
     try:
-        new_gallery = Gallery.create(data)
-        if 'avatar' in request.files:
-            file = request.files['avatar']
-            if file.filename != '':
-                s3_url = upload_file_to_s3(file, f"{Gallery.__tablename__}/{new_gallery.id}")
+        for picture in pictures:
+            if picture.filename != '':
+                gallery_data = {
+                    'artist_id': artist_id,
+                    'show_on_top': show_on_top
+                }
+                new_gallery = Gallery.create(gallery_data)
+                s3_url = upload_file_to_s3(picture, f"{Gallery.__tablename__}/{new_gallery.id}")
                 new_gallery.picture = s3_url
                 new_gallery.save()
-        return jsonify(new_gallery.to_dict()), 201
-    except ValueError as e:
+                created_galleries.append(new_gallery.to_dict())
+        return jsonify({'galleries': created_galleries}), 201
+    except Exception as e:
         return jsonify({'error': str(e)}), 400
-
 
 
 @bp.route('', methods=['GET'], strict_slashes=False)
@@ -154,8 +172,13 @@ def get_galleries():
     artist_id = request.args.get('artist_id')
     show_on_top = request.args.get('show_on_top')
     created_at = request.args.get('created_at')
+
     if artist_id:
+        artist = Artist.get(artist_id)
+        if not artist or artist.disabled:
+            return jsonify({'error': 'Artist is disabled or not found'}), 400
         filters['artist_id'] = artist_id
+
     if show_on_top:
         filters['show_on_top'] = show_on_top.lower() == 'true'
     if created_at:
@@ -164,19 +187,19 @@ def get_galleries():
             filters['created_at'] = {'gte': created_at}
         except ValueError:
             return jsonify({'error': 'Invalid created_at format. Use ISO 8601 format.'}), 400
-    
+
     order_by = []
     order_fields = request.args.getlist('order_by')
     for field in order_fields:
         field_name, direction = field.split(':')
         order_by.append((field_name, direction))
-    
+
     page = int(request.args.get('page', 1))
     per_page = int(request.args.get('per_page', 10))
-    
+
     galleries, total, total_records = Gallery.paginate(page, per_page, filters, order_by)
     total_pages = (total + per_page - 1) // per_page
-    
+
     return jsonify({
         'current_page': page,
         'total_pages': total_pages,
@@ -280,8 +303,8 @@ def update_gallery(gallery_id):
     show_on_top = request.form.get('show_on_top', 'false').lower() == 'true'
     gallery.show_on_top = show_on_top
 
-    if 'avatar' in request.files:
-        file = request.files['avatar']
+    if 'picture' in request.files:
+        file = request.files['picture']
         if file.filename != '':
             s3_url = upload_file_to_s3(file, f"{Gallery.__tablename__}/{gallery.id}")
             gallery.picture = s3_url

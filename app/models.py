@@ -115,6 +115,7 @@ class Artist(ModelBase):
     avatar = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, default=datetime.now())
     updated_at = db.Column(db.DateTime, default=datetime.now(), onupdate=datetime.now())
+    disabled = db.Column(db.Boolean, default=False)
 
     @classmethod
     def validate(cls, data):
@@ -138,6 +139,7 @@ class Team(ModelBase):
     position = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, default=datetime.now())
     updated_at = db.Column(db.DateTime, default=datetime.now(), onupdate=datetime.now())
+    disabled = db.Column(db.Boolean, default=False)
 
     @classmethod
     def validate(cls, data):
@@ -163,3 +165,21 @@ class Gallery(ModelBase):
 
     def artist(self):
         return Artist.query.get(self.artist_id)
+
+
+
+class Kols(ModelBase):
+    __tablename__ = 'Kols'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False)
+    link_x = db.Column(db.String(255))
+    avatar = db.Column(db.String(255))
+    disabled = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.now())
+    updated_at = db.Column(db.DateTime, default=datetime.now(), onupdate=datetime.now())
+
+    @classmethod
+    def validate(cls, data):
+        if 'name' not in data or not data['name']:
+            raise ValueError("Name is required")
