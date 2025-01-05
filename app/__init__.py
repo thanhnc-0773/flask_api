@@ -25,10 +25,11 @@ def create_app():
     app.logger.setLevel(logging.INFO)
 
     with app.app_context():
-        from app.routes import artist_routes, team_routes, gallery_routes
+        from app.routes import artist_routes, team_routes, gallery_routes, kol_routes
         app.register_blueprint(artist_routes.bp, url_prefix='/api/artists')
         app.register_blueprint(team_routes.bp, url_prefix='/api/teams')
         app.register_blueprint(gallery_routes.bp, url_prefix='/api/galleries')
+        app.register_blueprint(kol_routes.bp, url_prefix='/api/kols')
 
     return app
 

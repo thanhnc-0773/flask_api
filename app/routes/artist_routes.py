@@ -48,6 +48,13 @@ bp = Blueprint('artist_routes', __name__)
             'type': 'file',
             'required': False,
             'description': 'Avatar file to upload'
+        },
+        {
+            'name': 'disabled',
+            'in': 'formData',
+            'type': 'integer',
+            'required': False,
+            'description': 'Disable status of the artist (0 for false, 1 for true)'
         }
     ],
     'responses': {
@@ -62,6 +69,7 @@ bp = Blueprint('artist_routes', __name__)
                     'style': {'type': 'string'},
                     'x_tag': {'type': 'string'},
                     'avatar': {'type': 'string'},
+                    'disabled': {'type': 'integer'},
                     'created_at': {'type': 'string', 'format': 'date-time'},
                     'updated_at': {'type': 'string', 'format': 'date-time'}
                 }
@@ -77,6 +85,7 @@ def create_artist():
     link_x = request.form.get('link_x')
     style = request.form.get('style')
     x_tag = request.form.get('x_tag')
+    disabled = request.form.get('disabled', default=0, type=int)
     s3_url = None
 
     if not name or not style:
@@ -91,7 +100,8 @@ def create_artist():
         'name': name,
         'style': style,
         'link_x': link_x,
-        'x_tag': x_tag
+        'x_tag': x_tag,
+        'disabled': bool(disabled)
     }
 
     try:
@@ -178,6 +188,8 @@ def create_artist():
                                 'style': {'type': 'string'},
                                 'x_tag': {'type': 'string'},
                                 'avatar': {'type': 'string'},
+                                'total_image': {'type': 'integer'},
+                                'disabled': {'type': 'integer'},
                                 'created_at': {'type': 'string', 'format': 'date-time'},
                                 'updated_at': {'type': 'string', 'format': 'date-time'}
                             }
@@ -189,7 +201,7 @@ def create_artist():
     }
 })
 def get_artists():
-    filters = {}
+    filters = {'disabled': False}
     style = request.args.get('style')
     name = request.args.get('name')
     created_at = request.args.get('created_at')
@@ -216,6 +228,8 @@ def get_artists():
         Artist,
         func.coalesce(subquery.c.total_image, 0).label('total_image')
     ).outerjoin(subquery, Artist.id == subquery.c.artist_id)
+
+    query = query.filter(Artist.disabled == filters['disabled'])
 
     if 'style' in filters:
         query = query.filter(Artist.style == filters['style'])
@@ -269,6 +283,7 @@ def get_artists():
                     'style': {'type': 'string'},
                     'x_tag': {'type': 'string'},
                     'avatar': {'type': 'string'},
+                    'disabled': {'type': 'integer'},
                     'created_at': {'type': 'string', 'format': 'date-time'},
                     'updated_at': {'type': 'string', 'format': 'date-time'}
                 }
@@ -383,6 +398,13 @@ def get_artist_images(artist_id):
             'type': 'string',
             'required': False,
             'description': 'X tag of the artist'
+        },
+        {
+            'name': 'disabled',
+            'in': 'formData',
+            'type': 'integer',
+            'required': False,
+            'description': 'Disable status of the artist (0 for false, 1 for true)'
         }
     ],
     'responses': {
@@ -397,6 +419,7 @@ def get_artist_images(artist_id):
                     'style': {'type': 'string'},
                     'x_tag': {'type': 'string'},
                     'avatar': {'type': 'string'},
+                    'disabled': {'type': 'integer'},
                     'created_at': {'type': 'string', 'format': 'date-time'},
                     'updated_at': {'type': 'string', 'format': 'date-time'}
                 }
@@ -418,6 +441,10 @@ def update_artist(artist_id):
             s3_url = upload_file_to_s3(
                 file, location=f"{Artist.__tablename__}/{artist_id}")
             artist.avatar = s3_url
+
+    if 'disabled' in request.form:
+        disabled = request.form.get('disabled', type=int)
+        artist.disabled = bool(disabled)
 
     artist.save()
     return jsonify(artist.to_dict()), 200

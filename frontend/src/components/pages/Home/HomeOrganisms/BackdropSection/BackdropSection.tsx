@@ -5,7 +5,7 @@ import "./BackdropSection.css";
 
 const BackdropSection: React.FC = () => {
   return (
-    <div className="backdrop-section-container  animate-me">
+    <div className="backdrop-section-container animate-me">
       <img src={backLogo} alt="backdrop-logo" className="backdrop-logo" />
 
       <img src={banner} alt="backdrop-banner" className="backdrop-banner" />
