@@ -12,20 +12,6 @@ bp = Blueprint('kols_routes', __name__)
     'tags': ['Kols'],
     'parameters': [
         {
-            'name': 'page',
-            'in': 'query',
-            'type': 'integer',
-            'required': False,
-            'description': 'Page number for pagination'
-        },
-        {
-            'name': 'per_page',
-            'in': 'query',
-            'type': 'integer',
-            'required': False,
-            'description': 'Number of items per page for pagination'
-        },
-        {
             'name': 'name',
             'in': 'query',
             'type': 'string',
@@ -61,25 +47,17 @@ bp = Blueprint('kols_routes', __name__)
         200: {
             'description': 'List of Kols',
             'schema': {
-                'type': 'object',
-                'properties': {
-                    'current_page': {'type': 'integer'},
-                    'total_pages': {'type': 'integer'},
-                    'total_records': {'type': 'integer'},
-                    'datas': {
-                        'type': 'array',
-                        'items': {
-                            'type': 'object',
-                            'properties': {
-                                'id': {'type': 'integer'},
-                                'name': {'type': 'string'},
-                                'link_x': {'type': 'string'},
-                                'avatar': {'type': 'string'},
-                                'disabled': {'type': 'boolean'},
-                                'created_at': {'type': 'string', 'format': 'date-time'},
-                                'updated_at': {'type': 'string', 'format': 'date-time'}
-                            }
-                        }
+                'type': 'array',
+                'items': {
+                    'type': 'object',
+                    'properties': {
+                        'id': {'type': 'integer'},
+                        'name': {'type': 'string'},
+                        'link_x': {'type': 'string'},
+                        'avatar': {'type': 'string'},
+                        'disabled': {'type': 'boolean'},
+                        'created_at': {'type': 'string', 'format': 'date-time'},
+                        'updated_at': {'type': 'string', 'format': 'date-time'}
                     }
                 }
             }
@@ -87,8 +65,6 @@ bp = Blueprint('kols_routes', __name__)
     }
 })
 def get_kols():
-    page = int(request.args.get('page', 1))
-    per_page = int(request.args.get('per_page', 10))
     name = request.args.get('name')
     link_x = request.args.get('link_x')
     disabled = request.args.get('disabled')
@@ -102,20 +78,24 @@ def get_kols():
     if disabled is not None:
         filters['disabled'] = disabled.lower() == 'true'
 
-    ordering = []
-    for order in order_by:
-        field, direction = order.split(':')
-        ordering.append((field, direction))
+    query = Kols.query
+    for attr, condition in filters.items():
+        if isinstance(condition, dict) and 'like' in condition:
+            query = query.filter(getattr(Kols, attr).like(condition['like']))
+        elif attr == 'disabled':
+            query = query.filter(getattr(Kols, attr) == condition)
 
-    kols, total, total_records = Kols.paginate(page, per_page, filters, ordering)
-    total_pages = (total + per_page - 1) // per_page
+    if order_by:
+        for order in order_by:
+            field, direction = order.split(':')
+            if direction == 'asc':
+                query = query.order_by(getattr(Kols, field).asc())
+            elif direction == 'desc':
+                query = query.order_by(getattr(Kols, field).desc())
 
-    return jsonify({
-        'current_page': page,
-        'total_pages': total_pages,
-        'total_records': total_records,
-        'datas': [kol.to_dict() for kol in kols]
-    }), 200
+    kols = query.all()
+
+    return jsonify([kol.to_dict() for kol in kols]), 200
 
 
 @bp.route('', methods=['POST'], strict_slashes=False)
