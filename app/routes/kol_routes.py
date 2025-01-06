@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.models import Gallery  # Model Gallery bạn nhắc tới là "Kols" trong __tablename__
+from app.models import Kols
 from app.utils.s3_utils import upload_file_to_s3
 from flasgger import swag_from
 from datetime import datetime
@@ -107,7 +107,7 @@ def get_kols():
         field, direction = order.split(':')
         ordering.append((field, direction))
 
-    kols, total, total_records = Gallery.paginate(page, per_page, filters, ordering)
+    kols, total, total_records = Kols.paginate(page, per_page, filters, ordering)
     total_pages = (total + per_page - 1) // per_page
 
     return jsonify({
@@ -173,7 +173,7 @@ def create_kol():
 
     try:
         data = {'name': name, 'link_x': link_x}
-        new_kol = Gallery.create(data)
+        new_kol = Kols.create(data)
 
         if 'avatar' in request.files:
             file = request.files['avatar']
@@ -242,7 +242,7 @@ def create_kols_batch():
             if 'name' not in record or not record['name']:
                 return jsonify({'error': 'Name is required for all records'}), 400
 
-            new_kol = Gallery.create({
+            new_kol = Kols.create({
                 'name': record['name'],
                 'link_x': record.get('link_x')
             })
@@ -287,7 +287,7 @@ def create_kols_batch():
     }
 })
 def get_kol(kol_id):
-    kol = Gallery.get(kol_id)
+    kol = Kols.get(kol_id)
     if not kol:
         return jsonify({'error': 'Kol not found'}), 404
     return jsonify(kol.to_dict()), 200
@@ -345,7 +345,7 @@ def get_kol(kol_id):
     }
 })
 def update_kol(kol_id):
-    kol = Gallery.get(kol_id)
+    kol = Kols.get(kol_id)
     if not kol:
         return jsonify({'error': 'Kol not found'}), 404
 
@@ -389,7 +389,7 @@ def update_kol(kol_id):
     }
 })
 def delete_kol(kol_id):
-    kol = Gallery.get(kol_id)
+    kol = Kols.get(kol_id)
     if not kol:
         return jsonify({'error': 'Kol not found'}), 404
     kol.delete()
