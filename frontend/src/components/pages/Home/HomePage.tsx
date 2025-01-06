@@ -5,10 +5,12 @@ import { HomeContextProvider } from "./context/HomeContext";
 import "./HomePage.css";
 import HomeTemplate from "./HomeTemplate";
 import { useHandleScroll } from "./hooks/useHandleScroll";
+import { useHandleKols } from "./hooks/useHandleKols";
 gsap.registerPlugin(ScrollTrigger);
 
 const HomePage: React.FC = () => {
   const { scrollPosition } = useHandleScroll();
+  const { listKol } = useHandleKols();
 
   useEffect(() => {
     const elements = document.querySelectorAll(".animate-me");
@@ -38,7 +40,7 @@ const HomePage: React.FC = () => {
   }, []);
 
   return (
-    <HomeContextProvider value={{ scrollPosition }}>
+    <HomeContextProvider value={{ listKol, scrollPosition }}>
       <div className="home-container .animate-me">
         <HomeTemplate />
       </div>

@@ -1,6 +1,8 @@
 import React from "react";
+import { HomeKOLs } from "../Home.type";
 
 export interface HomeContextProps {
+  listKol: HomeKOLs[][];
   scrollPosition: number;
 }
 

@@ -1,14 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import Marquee from "react-fast-marquee";
-import { dumpKOLs } from "../../Home.type";
+import { HomeContext } from "../../context";
 import "./HomeKOLs.css";
 
 const HomeKOLs: React.FC = () => {
+  const { listKol } = useContext(HomeContext);
+
+  if (!listKol || !listKol.length) return null;
+
   return (
     <div className="home-kol-container animate-me">
       <div className="home-kol-title">KOLs</div>
       <div className="hall">
-        {dumpKOLs.map((row, rowIndex) => (
+        {listKol.map((row, rowIndex) => (
           <Marquee
             autoFill
             key={rowIndex}
