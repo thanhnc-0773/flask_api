@@ -148,6 +148,7 @@ def create_galleries():
                 'properties': {
                     'current_page': {'type': 'integer'},
                     'total_pages': {'type': 'integer'},
+                    'total_records': {'type': 'integer'},
                     'datas': {
                         'type': 'array',
                         'items': {
@@ -190,9 +191,13 @@ def get_galleries():
 
     order_by = []
     order_fields = request.args.getlist('order_by')
-    for field in order_fields:
-        field_name, direction = field.split(':')
-        order_by.append((field_name, direction))
+    if order_fields:
+        for field in order_fields:
+            field_name, direction = field.split(':')
+            order_by.append((field_name, direction))
+    else:
+        order_by.append(('show_on_top', 'desc'))
+        order_by.append(('created_at', 'desc'))
 
     page = int(request.args.get('page', 1))
     per_page = int(request.args.get('per_page', 10))
