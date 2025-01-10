@@ -253,6 +253,71 @@ def get_gallery(gallery_id):
     return jsonify(gallery.to_dict()), 200
 
 
+@bp.route('/single_gallery', methods=['POST'], strict_slashes=False)
+@swag_from({
+    'tags': ['Galleries'],
+    'parameters': [
+        {
+            'name': 'artist_id',
+            'in': 'formData',
+            'type': 'integer',
+            'required': True,
+            'description': 'ID of the artist'
+        },
+        {
+            'name': 'show_on_top',
+            'in': 'formData',
+            'type': 'boolean',
+            'description': 'Whether to show the gallery item on top'
+        },
+        {
+            'name': 'picture',
+            'in': 'formData',
+            'type': 'file',
+            'description': 'File to upload'
+        }
+    ],
+    'responses': {
+        201: {
+            'description': 'Gallery item created successfully',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'artist_id': {'type': 'integer'},
+                    'picture': {'type': 'string'},
+                    'show_on_top': {'type': 'boolean'},
+                    'created_at': {'type': 'string', 'format': 'date-time'},
+                    'updated_at': {'type': 'string', 'format': 'date-time'}
+                }
+            }
+        },
+    }
+})
+def create_gallery():
+    artist_id = request.form.get('artist_id')
+    show_on_top = request.form.get('show_on_top', 'false').lower() == 'true'
+
+    if not artist_id:
+        return jsonify({'error': 'Artist ID is required'}), 400
+
+    data = {
+        'artist_id': artist_id,
+        'show_on_top': show_on_top
+    }
+
+    try:
+        new_gallery = Gallery.create(data)
+        if 'avatar' in request.files:
+            file = request.files['avatar']
+            if file.filename != '':
+                s3_url = upload_file_to_s3(file, f"{Gallery.__tablename__}/{new_gallery.id}")
+                new_gallery.picture = s3_url
+                new_gallery.save()
+        return jsonify(new_gallery.to_dict()), 201
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+
+
 @bp.route('/<int:gallery_id>', methods=['PUT'])
 @swag_from({
     'tags': ['Galleries'],
