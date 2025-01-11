@@ -2,7 +2,7 @@ from app import db
 from sqlalchemy import asc, desc
 from contextlib import contextmanager
 from datetime import datetime
-from app.utils.s3_utils import get_presign_url_from_s3
+from app.utils.s3_utils import get_presign_url_from_s3, delete_file_from_s3
 
 class ModelBase(db.Model):
     __abstract__ = True
@@ -80,6 +80,10 @@ class ModelBase(db.Model):
     def delete(self):
         with self.transaction():
             db.session.delete(self)
+            if hasattr(self, 'avatar') and self.avatar:
+                delete_file_from_s3(self.avatar, location=f"{self.__tablename__}/{self.id}")
+            if hasattr(self, 'picture') and self.picture:
+                delete_file_from_s3(self.picture, location=f"{self.__tablename__}/{self.id}")
             db.session.commit()
         return True
 

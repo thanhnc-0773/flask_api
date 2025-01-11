@@ -35,3 +35,13 @@ def get_presign_url_from_s3(file_name, location):
                                                       'Key': f"{location}/{file_name}"},
                                               ExpiresIn=3600)
     return presigned_url
+
+def delete_file_from_s3(file_name, location):
+    try:
+        s3.delete_object(Bucket=S3_BUCKET_NAME, Key=f"{location}/{file_name}")
+        print(f"File {file_name} deleted from S3")
+    except Exception as e:
+        print(f"Failed to delete {file_name} from S3: {e}")
+        return False
+
+    return True
